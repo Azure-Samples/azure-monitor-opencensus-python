@@ -1,0 +1,47 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <title>Todo App</title> 
+  
+</head> 
+<body> 
+    <h1>Todo List</h1> 
+    <div>Add a new todo item:  
+        <form action="{{ url_for('add') }}" method="POST"> 
+            {{ form.add_input }}
+            {{ form.add_submit() }}
+        </form>
+        <form action="{{ url_for('save') }}" method="POST"> 
+            {{ form.valid_submit() }}
+        </form>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <p>{{ message }}</p>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+    <div> 
+        <h2>Incomplete Items</h2> 
+        <ul> 
+            {% for todo in incomplete %}
+                <li style="font-size: 30pt">{{ todo.text }}
+                    <form action="{{ url_for('complete', id=todo.id) }}" method="POST"> 
+                        {{ form.mark_submit() }}
+                    </form>
+                </li>
+            {% endfor %}     
+        </ul> 
+        <h2>Completed Items</h2> 
+        <ul> 
+            {% for todo in complete %} 
+            <li style="font-size: 30pt">{{ todo.text }}</li> 
+            {% endfor %} 
+        </ul> 
+    </div> 
+</body> 
+</html> 
