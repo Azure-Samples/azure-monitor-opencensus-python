@@ -9,14 +9,6 @@ description: "This sample contains a simple Flask application to show how you ca
 urlFragment: "azure-monitor-opencensus-python"
 ---
 
-# Installation
-------------
-
-Install OpenCensus Azure Monitor samples through `pip`.
-
-`pip install opencensus-azure-monitor-samples`
-
-
 # Flask "To-Do" Sample Application
 
 ## Setup
