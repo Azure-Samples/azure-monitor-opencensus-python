@@ -5,8 +5,8 @@ languages:
 - html
 products:
 - azure
-description: "This sample contains a simple Flask application to show how you can instrument the OpenCensus Azure Monitor exporters as well as track telemetry from popular Python libraries via OpenCensus integrations.
-urlFragment: "azure-monitor-opencensus-python"
+description: "This sample contains a simple Flask application to show how you can instrument the OpenCensus Azure Monitor exporters as well as track telemetry from popular Python libraries via OpenCensus integrations."
+urlFragment: azure-monitor-opencensus-python
 ---
 
 # Flask "To-Do" Sample Application
