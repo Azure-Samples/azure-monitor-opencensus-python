@@ -1,64 +1,42 @@
 ---
 page_type: sample
 languages:
-- csharp
+- python
+- html
 products:
-- dotnet
-description: "Add 150 character max description"
-urlFragment: "update-this-to-unique-url-stub"
+- azure
+description: "This sample contains a simple Flask application to show how you can instrument the OpenCensus Azure Monitor exporters as well as track telemetry from popular Python libraries via OpenCensus integrations."
+urlFragment: azure-monitor-opencensus-python
 ---
 
-# Official Microsoft Sample
-
-<!-- 
-Guidelines on README format: https://review.docs.microsoft.com/help/onboard/admin/samples/concepts/readme-template?branch=master
-
-Guidance on onboarding samples to docs.microsoft.com/samples: https://review.docs.microsoft.com/help/onboard/admin/samples/process/onboarding?branch=master
-
-Taxonomies for products and languages: https://review.docs.microsoft.com/new-hope/information-architecture/metadata/taxonomies?branch=master
--->
-
-Give a short description for your sample here. What does it do and why is it important?
-
-## Contents
-
-Outline the file contents of the repository. It helps users navigate the codebase, build configuration and any related assets.
-
-| File/folder       | Description                                |
-|-------------------|--------------------------------------------|
-| `src`             | Sample source code.                        |
-| `.gitignore`      | Define what to ignore at commit time.      |
-| `CHANGELOG.md`    | List of changes to the sample.             |
-| `CONTRIBUTING.md` | Guidelines for contributing to the sample. |
-| `README.md`       | This README file.                          |
-| `LICENSE`         | The license for the sample.                |
-
-## Prerequisites
-
-Outline the required components and tools that a user might need to have on their machine in order to run the sample. This can be anything from frameworks, SDKs, OS versions or IDE releases.
+# Flask "To-Do" Sample Application
 
 ## Setup
 
-Explain how to prepare the sample once the user clones or downloads the repository. The section should outline every step necessary to install dependencies and set up any settings (for example, API keys and output folders).
+To send telemetry to Azure Monitor, pass in your instrumentation key into `INSTRUMENTATION_KEY` in `config.py`.
 
-## Running the sample
+```
+INSTRUMENTATION_KEY = <your-ikey-here>
+```
 
-Outline step-by-step instructions to execute the sample and see its output. Include steps for executing the sample from the IDE, starting specific services in the Azure portal or anything related to the overall launch of the code.
+The default database URI links to a sqlite database `app.db`. To configure a different database, you can modify `config.py` and change the `SQLALCHEMY_DATABASE_URI` value to point to a database of your choosing.
 
-## Key concepts
+```
+SQLALCHEMY_DATABASE_URI = <your-database-URI-here>
+```
 
-Provide users with more context on the tools and services used in the sample. Explain some of the code that is being used and how services interact with each other.
+## Usage
 
-## Contributing
+1. Navigate to where `azure_monitor\flask_sample` is located.
+2. Run the main application via `python sample.py`.
+4. Hit your local endpoint (should be http://localhost:5000). This should open up a browser to the main page.
+5. On the newly opened page, you can add tasks via the textbox under `Add a new todo item:`. You can enter any text you want (cannot be blank).
+6. Click `Add Item` to add the task. The task will be added under `Incomplete Items`. Adding an item with greater than 10 characters will generate an error.
+7. To utilize the `Save to File` feature, run the endpoint application via `python endpoint.py`. This will run another Flask application with a WSGI server running on http://localhost:5001. Click `Save to File` and all tasks will be written to a file `file.txt` in the `output` folder.
+8. Each task has a `Mark As Complete` button. Clicking it will move the task from incomplete to completed.
+9. You can also hit the `blacklist` url page to see a sample of a page that does not have telemetry being sent (http://localhost:5000/blacklist).
+10. You can also run a command line interface application to hit the endpoints on you Flask application directly. Run `command.py` and follow the prompts accordingly.
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+## Types of telemetry sent
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
-
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+There are various types of telemetry that are being sent in the sample application. Refer to [Telemetry Type in Azure Monitor](https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python#telemetry-type-mappings). Every button click hits an endpoint that exists in the flask application, so they will be treated as incoming requests (`requests` table in Azure Monitor). A log message is also sent every time a button is clicked, so a log telemetry is sent (`traces` table in Azure Monitor). An exception telemetry is sent when an invalid task is entered (greater than 10 characters). A counter metric is recorded every time the `add` button is clicked. Metric telemetry is sent every interval (default 15.0 s, `customMetrics` table in Azure Monitor).
