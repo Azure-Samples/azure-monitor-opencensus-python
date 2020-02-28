@@ -5,6 +5,5 @@ from wtforms.validators import DataRequired
 
 class ToDoForm(FlaskForm):
     add_input = StringField('To Do', validators=[DataRequired()])
-    add_submit = SubmitField('Add Item')
     mark_submit = SubmitField('Mark As Complete')
     valid_submit = SubmitField('Save to File')
