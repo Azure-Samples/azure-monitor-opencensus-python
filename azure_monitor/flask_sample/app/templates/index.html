@@ -3,45 +3,60 @@
 <head> 
     <meta charset="UTF-8"> 
     <title>Todo App</title> 
-  
+    <link rel="stylesheet" href="/static/index.css">
 </head> 
 <body> 
-    <h1>Todo List</h1> 
-    <div>Add a new todo item:  
-        <form action="{{ url_for('add') }}" method="POST"> 
-            {{ form.add_input }}
-            {{ form.add_submit() }}
-        </form>
-        <form action="{{ url_for('save') }}" method="POST"> 
-            {{ form.valid_submit() }}
-        </form>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <p>{{ message }}</p>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-    </div>
-    <div> 
-        <h2>Incomplete Items</h2> 
-        <ul> 
-            {% for todo in incomplete %}
-                <li style="font-size: 30pt">{{ todo.text }}
+    <section class="todoapp">
+        <header class="header">
+            <h1>Todo List</h1>
+            <div class="header-container">
+                <div class="left-align-header">
+                    <form action="{{ url_for('save') }}" method="POST"> 
+                        {{ form.valid_submit(class_="save-button") }}
+                    </form>
+                </div>
+                <div class="right-align-header">
+                    {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                        <p>{{ message }}</p>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </header>
+        <section class="entry">
+            <form action="{{ url_for('add') }}" method="POST"> 
+                {{ form.add_input(class_="new-todo", placeholder="Enter a new task..." ) }}
+            </form>
+        </section>
+        <section class="main">
+            <h2>Incomplete Items</h2> 
+            <ul class="todo-list">
+                {% for todo in incomplete %}
+                <li style="font-size: 30pt">
+                    <!-- {{ todo.text }} -->
                     <form action="{{ url_for('complete', id=todo.id) }}" method="POST"> 
-                        {{ form.mark_submit() }}
+                        <!-- {{ form.mark_submit() }} -->
+                        <button type="submit" class="list-element">{{todo.text}}</button>
                     </form>
                 </li>
-            {% endfor %}     
-        </ul> 
-        <h2>Completed Items</h2> 
-        <ul> 
-            {% for todo in complete %} 
-            <li style="font-size: 30pt">{{ todo.text }}</li> 
             {% endfor %} 
-        </ul> 
-    </div> 
+            </ul>
+            <h2>Completed Items</h2> 
+            <ul> 
+                {% for todo in complete %} 
+                <li style="font-size: 30pt">
+                    <label class="list-element">{{ todo.text }}</label>
+                </li> 
+                {% endfor %} 
+            </ul> 
+        </section>
+
+        <footer class="footer"></footer>  
+    </section>
 </body> 
 </html> 
