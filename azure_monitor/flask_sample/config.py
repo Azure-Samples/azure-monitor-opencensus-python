@@ -8,9 +8,8 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    INSTRUMENTATION_KEY = '<your-ikey-here>'
-    CONNECTION_STRING = 'connection_string="InstrumentationKey=' + \
-        INSTRUMENTATION_KEY + '"'
+    INSTRUMENTATION_KEY = '70c241c9-206e-4811-82b4-2bc8a52170b9'
+    CONNECTION_STRING = 'InstrumentationKey=' + INSTRUMENTATION_KEY
     sampler = 'opencensus.trace.samplers.ProbabilitySampler(rate=1.0)'
     OPENCENSUS = {
         'TRACE': {
