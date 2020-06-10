@@ -13,7 +13,8 @@ urlFragment: azure-monitor-opencensus-python
 
 ## Setup
 
-To send telemetry to Azure Monitor, pass in your instrumentation key into `INSTRUMENTATION_KEY` in `config.py`.
+1. This package is not hosted on Pypi. You can install all dependencies locally using `pip install -r requirements.txt`.
+2. To send telemetry to Azure Monitor, pass in your instrumentation key into `INSTRUMENTATION_KEY` in `config.py`.
 
 ```
 INSTRUMENTATION_KEY = <your-ikey-here>
