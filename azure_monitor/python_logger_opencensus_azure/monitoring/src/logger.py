@@ -66,7 +66,7 @@ class AppLogger:
         log_handler.addFilter(CustomDimensionsFilter(custom_dimensions))
         return log_handler
 
-    def get_log_exporter(self, component_name="AppLogger"):
+    def _get_trace_exporter(self, component_name="AppLogger"):
         """[Get log exporter]
 
         Returns:
@@ -188,4 +188,3 @@ def get_disabled_logger():
     return AppLogger(
         config={"logging_enabled": "false", "app_insights_key": str(uuid.uuid1())}
     )
-
