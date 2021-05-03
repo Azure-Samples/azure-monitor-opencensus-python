@@ -213,7 +213,7 @@ config = {
 
 To track and log time of any function, tracer span can be used as shown in following example:
 
-   ```py
+    ```py
     config = {
             "log_level": "DEBUG",
             "logging_enabled": "true",
@@ -224,7 +224,7 @@ To track and log time of any function, tracer span can be used as shown in follo
     tracer = app_logger.get_tracer(component_name="SomeModule")
     with tracer.span("testspan"):
         test_function(app_logger)
-    
+
     def test_function(app_logger=get_disabled_logger()):
         pass
     ```
@@ -241,30 +241,30 @@ Unit tests for application using `AppLogger` can use either `logging_enabled` = 
 
 Following example shows the usage of `logging_enabled` = `false` and `get_disabled_logger()` in two unit tests.
 
-```python
+    ```python
 
-from SomeModule import my_method
-import uuid
-def test_my_method():
-    config = {
-        "log_level": "DEBUG",
-        "logging_enabled": "false",
-        "app_insights_key": str(uuid.uuid1()),
-    }
-    component_name = "TestComponent"
-        app_logger = AppLogger(
-            config=config
-        )
-    assert app_logger is not None
-    logger = app_logger.get_logger(component_name=component_name)
-    assert logger is not None
+    from SomeModule import my_method
+    import uuid
+    def test_my_method():
+        config = {
+            "log_level": "DEBUG",
+            "logging_enabled": "false",
+            "app_insights_key": str(uuid.uuid1()),
+        }
+        component_name = "TestComponent"
+            app_logger = AppLogger(
+                config=config
+            )
+        assert app_logger is not None
+        logger = app_logger.get_logger(component_name=component_name)
+        assert logger is not None
 
-def test_my_method():
-    app_logger = get_disabled_logger()
-    logger = app_logger.get_logger()
-    assert logger is not None
+    def test_my_method():
+        app_logger = get_disabled_logger()
+        logger = app_logger.get_logger()
+        assert logger is not None
 
-```
+    ```
 
 ### Usage
 
