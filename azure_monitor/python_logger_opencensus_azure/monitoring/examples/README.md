@@ -19,7 +19,7 @@ This document will give the overview about examples created using AppLogger clas
 
 Following are the steps to execute the examples:
 
-1. Follow Prerequisites mentioned in [section.](../../README.md#Prerequisites)
+1. Follow Prerequisites mentioned in [section.](../../README.md#prerequisites-for-using-applogger)
 
 1. Get Application Insights Instrumentation Key (app_insights_instrumentation_key) and update it in **logging_config.json**
 
