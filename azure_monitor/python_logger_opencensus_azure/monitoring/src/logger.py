@@ -70,7 +70,7 @@ class AppLogger:
         """[Get log exporter]
 
         Returns:
-            [AzureExporter]: [Azure Log Exporter]
+            [AzureExporter]: [Azure Trace Exporter]
         """
         app_insights_cs = "InstrumentationKey=" + self._get_app_insights_key()
         log_exporter = AzureExporter(
