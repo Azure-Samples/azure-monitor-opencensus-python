@@ -156,7 +156,7 @@ config = {
     def enable_flask(self,flask_app,component_name="AppLogger"):
     ```
 
-    `enable_flask` function enables Flask middleware as mentioned in the [documentation.][5] This is required to enable log tracing for flask applications.
+    `enable_flask` function enables Flask middleware as mentioned in the [documentation.][5] This is required to enable tracing for flask applications.
 
     Currently function for enabling flask is added but if application requires [integration][7] with other libraries like httplib, django, mysql, pymysql, pymongo, fastapi, postgresql etc then corresponding functions need to be added.
 
