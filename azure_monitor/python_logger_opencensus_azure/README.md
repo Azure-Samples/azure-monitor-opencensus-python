@@ -227,8 +227,8 @@ To track and log time of any function, tracer span can be used as shown in follo
     
     def test_function(app_logger=get_disabled_logger()):
         pass
-    
     ```
+
 Above code generates entry in dependency table in application insights for `target` = `testspan` with time duration taken by `test_function`. For example, in below screenshot we can see that time taken by `util_func` is around 19 sec.
 
 ![alt text](./monitoring/img/dependency.png)
@@ -290,13 +290,13 @@ python -m unittest discover .\monitoring\tests\
 Examples created using AppLogger can be found [here](./monitoring/examples/README.md)
 
 <!--Reference links in article-->
-[1]: https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python
+[1]: https://docs.microsoft.com/azure/azure-monitor/app/opencensus-python
 [2]: https://opencensus.io/
-[3]: hhttps://docs.microsoft.com/en-us/azure/azure-monitor/app/app-insights-overview
-[4]: https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
+[3]: https://docs.microsoft.com/azure/azure-monitor/app/app-insights-overview
+[4]: https://docs.microsoft.com/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
 [5]: https://github.com/census-instrumentation/opencensus-python/blob/master/contrib/opencensus-ext-flask/opencensus/ext/flask/flask_middleware.py
-[6]: https://docs.microsoft.com/en-us/azure/azure-monitor/app/correlation#role-names
-[7]: https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python-dependency
+[6]: https://docs.microsoft.com/azure/azure-monitor/app/correlation#role-names
+[7]: https://docs.microsoft.com/azure/azure-monitor/app/opencensus-python-dependency
 
 ### Contributors
 
