@@ -66,11 +66,11 @@ class AppLogger:
         log_handler.addFilter(CustomDimensionsFilter(custom_dimensions))
         return log_handler
 
-    def get_log_exporter(self, component_name="AppLogger"):
+    def _get_trace_exporter(self, component_name="AppLogger"):
         """[Get log exporter]
 
         Returns:
-            [AzureExporter]: [Azure Log Exporter]
+            [AzureExporter]: [Azure Trace Exporter]
         """
         app_insights_cs = "InstrumentationKey=" + self._get_app_insights_key()
         log_exporter = AzureExporter(
@@ -188,4 +188,3 @@ def get_disabled_logger():
     return AppLogger(
         config={"logging_enabled": "false", "app_insights_key": str(uuid.uuid1())}
     )
-
