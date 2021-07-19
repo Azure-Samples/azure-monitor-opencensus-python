@@ -8,11 +8,26 @@ description: "This sample contains a simple Azure Function to show how you can s
 urlFragment: azure-monitor-opencensus-python
 ---
 
-# Azure Function Sample Application
+# Instrument an Azure Function (Python) using Opencensus 
 
 ## Overview
 
-## Run it locally
+Azure Function (Python) already supports instrumenting using Opencensus. However, the current out-of-the-box (OOTB) implementation/support contains has some frictions which make it difficult to get a correlated end-to-end view of a single function invocation.
+
+The goal of this sample provides developers how to overcome the current limitations and get correlated log information. It covers the following scenarios:
+
+- Log incoming Azure function requests
+- Log appication traces & error messages
+- Log external dependencies (IN-PROC & HTTP using Python's requests)
+- Log entries (incoming requests, traces & errors, external dependencies) are correlated (using the Azure Function's operation id)
+
+### Known Limitations in Current OOTB Logging Integration (Azure Function)
+
+- External dependency log records don't have the correct *Cloud Role Name* (field: cloud_RoleName). This results in wrong information displayed in Application Insight's *Application Map*. Open issue **TODO**
+- Errors (logged with the OOTB logging integration) are not correctly logged as Application Insights Exception records. Currently `logging.exception(..)` creates a trace record (with severity level 3 = Error). This comes with certain side effects: E.g. errors are won't show up in Application Insights dashboard (*Failures*) and troubleshooting becomes harder. **TODO**
+
+
+## Run Locally
 
 ### Setup
 
@@ -37,9 +52,9 @@ urlFragment: azure-monitor-opencensus-python
 
 ### Test
 
-1. Run '```pytest```'
+1. Run tests with `pytest`
 
 ### Run
 
-1. Start the Azure Function host: ```func host start```
-1. Send HTTP request. ```curl http://localhost:[PORT]/api/instrumentation```
+1. Start the Azure Function host: `func host start`
+1. Send HTTP request. `curl http://localhost:[PORT]/api/instrumentation`
