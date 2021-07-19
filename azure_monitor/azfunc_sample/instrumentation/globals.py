@@ -1,4 +1,5 @@
 import os
+import socket
 import logging
 
 from logging import Logger
@@ -31,6 +32,11 @@ if not EXTERNAL_DEPENDENCY_URL:
 config_integration.trace_integrations(["logging", "requests"])
 
 
+def callback_add_role_name(envelope):
+    """Add role name for logger."""
+    envelope.tags["ai.cloud.role"] = WEBSITE_SITE_NAME
+    envelope.tags["ai.cloud.roleInstance"] = socket.getfqdn()
+
 def getLogger(
     name: str,
     instrumentation_conn_string: str = INSTRUMENTATION_KEY,
@@ -43,14 +49,8 @@ def getLogger(
         instrumentation_conn_string([str]): [The AppInsights instrumentation connection string]
         propagate([bool]): [Enable log propagation (default: false)]
     """
-
-    def _callback_add_role_name(envelope):
-        """Add role name for logger."""
-        envelope.tags["ai.cloud.role"] = WEBSITE_SITE_NAME
-        envelope.tags["ai.cloud.roleInstance"] = WEBSITE_SITE_NAME
-
     logHandler = AzureLogHandler(connection_string=instrumentation_conn_string)
-    logHandler.add_telemetry_processor(_callback_add_role_name)
+    logHandler.add_telemetry_processor(callback_add_role_name)
 
     logger = logging.getLogger(name)
     logger.addHandler(logHandler)

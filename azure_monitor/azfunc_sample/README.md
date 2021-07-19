@@ -23,8 +23,8 @@ The goal of this sample provides developers how to overcome the current limitati
 
 ### Known Limitations in Current OOTB Logging Integration (Azure Function)
 
-- External dependency log records don't have the correct *Cloud Role Name* (field: cloud_RoleName). This results in wrong information displayed in Application Insight's *Application Map*. Open issue **TODO**
-- Errors (logged with the OOTB logging integration) are not correctly logged as Application Insights Exception records. Currently `logging.exception(..)` creates a trace record (with severity level 3 = Error). This comes with certain side effects: E.g. errors are won't show up in Application Insights dashboard (*Failures*) and troubleshooting becomes harder. **TODO**
+- External dependency log records don't have the correct *Cloud Role Name* (field: cloud_RoleName). This results in wrong information displayed in Application Insight's *Application Map*. See <https://github.com/census-instrumentation/opencensus-python/issues/1052>
+- Errors (logged with the OOTB logging integration) are not correctly logged as Application Insights Exception records. Currently `logging.exception(..)` creates a trace record (with severity level 3 = Error). This comes with certain side effects: E.g. errors are won't show up in Application Insights dashboard (*Failures*) and troubleshooting becomes harder (see issue <https://github.com/Azure/azure-functions-python-worker/issues/866>)
 
 
 ## Run Locally
