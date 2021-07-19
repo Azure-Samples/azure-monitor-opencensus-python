@@ -37,6 +37,7 @@ def callback_add_role_name(envelope):
     envelope.tags["ai.cloud.role"] = WEBSITE_SITE_NAME
     envelope.tags["ai.cloud.roleInstance"] = socket.getfqdn()
 
+
 def getLogger(
     name: str,
     instrumentation_conn_string: str = INSTRUMENTATION_KEY,
