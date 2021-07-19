@@ -3,7 +3,7 @@ from opencensus.extension.azure.functions import OpenCensusExtension
 from opencensus.trace import execution_context
 
 from .globals import INSTRUMENTATION_KEY, getLogger
-from .greeter_function import GreeterFunction
+from .instrumentation_func import FunctionLogic
 
 # configure opencensus ext for azure function.
 # this ensures that the an opencensus tracer is created and associated with the func context
@@ -27,4 +27,4 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
         # have the correct correlaton (operation) id
         execution_context.set_opencensus_tracer(context.tracer)  # type: ignore[attr-defined]
 
-    return GreeterFunction.run(req)
+    return FunctionLogic.run(req)

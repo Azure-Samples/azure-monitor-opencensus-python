@@ -10,10 +10,14 @@ urlFragment: azure-monitor-opencensus-python
 
 # Azure Function Sample Application
 
-## Setup
+## Overview
+
+## Run it locally
+
+### Setup
 
 1. Install [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=linux%2Ccsharp%2Cbash).
-1. Install Azure Storage Emulator [Azurite](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite)
+1. Install Azure Storage Emulator [Azurite](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-azurite) & start Azurite's Blob service 
 1. Install all package dependencies locally using `pip install -r requirements.txt`.
 1. Create a file named `local.settings.json` which contains the following configuration information (*replace the placeholders*)
 
@@ -31,8 +35,11 @@ urlFragment: azure-monitor-opencensus-python
     }
     ```
 
-## Usage
+### Test
 
-1. Start Azurite's Blob service
+1. Run '```pytest```'
+
+### Run
+
 1. Start the Azure Function host: ```func host start```
-1. Send HTTP request. ```curl http://localhost:[PORT]/api/opencensus-azfunc-sample```
+1. Send HTTP request. ```curl http://localhost:[PORT]/api/instrumentation```

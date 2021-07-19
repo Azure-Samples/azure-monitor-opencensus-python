@@ -2,4 +2,8 @@
 .vscode
 local.settings.json
 tests
+.pytest_cache
 .venv
+.flake8
+.test.env
+*.md

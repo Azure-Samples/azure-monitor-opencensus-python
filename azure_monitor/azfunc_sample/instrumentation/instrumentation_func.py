@@ -6,7 +6,7 @@ from .utils import call_internal_api, call_external_api
 logger = getLogger(__name__)
 
 
-class GreeterFunction:
+class FunctionLogic:
     @classmethod
     def run(cls, req: func.HttpRequest) -> func.HttpResponse:
         """Azure Function business logic
@@ -27,7 +27,7 @@ class GreeterFunction:
 
         # TRACES (SEVERITY)
         # create log entries with different severity levels (warning, exception)
-        logger.warn("log warning message")
+        logger.warning("log warning message")
 
         try:
             assert 1 == 0
@@ -35,7 +35,6 @@ class GreeterFunction:
             logger.exception(ex)
 
         return func.HttpResponse(
-            "This HTTP triggered function executed successfully. "
-            "Pass a name in the query string or in the request body for a personalized response.",
+            "This HTTP triggered function executed successfully.",
             status_code=200,
         )
