@@ -8,24 +8,46 @@ description: "This sample contains a simple Azure Function to show how you can s
 urlFragment: azure-monitor-opencensus-python
 ---
 
-# Instrument an Azure Function (Python) using Opencensus 
+# Correlated End-To-End Azure Function (Python) Instrumentation Opencensus 
 
 ## Overview
 
-Azure Function (Python) already supports instrumenting using Opencensus. However, the current out-of-the-box (OOTB) implementation/support contains has some frictions which make it difficult to get a correlated end-to-end view of a single function invocation.
+Azure Function (Python) already supports instrumentaton using Opencensus. Unfortunately, the current out-of-the-box (OOTB) implementation/support has some flaws (see below), which make it difficult to get a correlated end-to-end view of a single function invocation (in Azure Monitor/Application Insights).
 
-The goal of this sample provides developers how to overcome the current limitations and get correlated log information. It covers the following scenarios:
+It is also important to assign the correct cloud role name and cloud instance name to different log records sent to Application Insights (for additional insights). This is especially relevant for distributed, scalable applications sending logs to a single Application Insights instance.
 
-- Log incoming Azure function requests
-- Log appication traces & error messages
-- Log external dependencies (IN-PROC & HTTP using Python's requests)
-- Log entries (incoming requests, traces & errors, external dependencies) are correlated (using the Azure Function's operation id)
+### Example of a Correlated End-to-End Azure Function Invocation
+
+End-to-end transaction:
+
+![AI Correlated end2end function invocation](./docs/assets/01-ai-correlated-invocation.PNG)
+
+Associated application trace messages:
+
+![AI Application trace messages](./docs/assets/02-ai-correlated-invocation.PNG)
+
+Associated AI Application Map:
+
+![AI Application Map](./docs/assets/03-ai-application-map.PNG)
+
+The images shows the following elements:
+
+- Correlated (per Azure Function invocatio) log information incl
+    - Incoming request information
+    - Appication traces & error messages
+    - External dependencies (IN-PROC & HTTP using Python's requests)
+- Application Map (defined cloud role and cloud instance values)
 
 ### Known Limitations in Current OOTB Logging Integration (Azure Function)
 
 - External dependency log records don't have the correct *Cloud Role Name* (field: cloud_RoleName). This results in wrong information displayed in Application Insight's *Application Map*. See <https://github.com/census-instrumentation/opencensus-python/issues/1052>
 - Errors (logged with the OOTB logging integration) are not correctly logged as Application Insights Exception records. Currently `logging.exception(..)` creates a trace record (with severity level 3 = Error). This comes with certain side effects: E.g. errors are won't show up in Application Insights dashboard (*Failures*) and troubleshooting becomes harder (see issue <https://github.com/Azure/azure-functions-python-worker/issues/866>)
 
+## Goal 
+
+The goal of this code sample is to demonstrate an alternative (custom) approach of instrumenting Azure Function code using Opencensus. This should give developers more insights how to use Opencensus and how to overcome the limitations of the OOTB implementation.
+
+> *Important. Once the issues (see below) are resolved in the platform, it is recommended to move to the OOTB implementation!* 
 
 ## Run Locally
 

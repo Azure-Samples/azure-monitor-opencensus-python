@@ -7,3 +7,4 @@ tests
 .flake8
 .test.env
 *.md
+docs
