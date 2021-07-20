@@ -74,6 +74,7 @@ The goal of this code sample is to demonstrate an alternative (custom) approach 
 
 ### Test
 
+1. (Optional) Update environment variables in file `.test.env`
 1. Run tests with `pytest`
 
 ### Run
