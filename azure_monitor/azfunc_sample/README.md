@@ -8,7 +8,7 @@ description: "This sample contains a simple Azure Function to show how you can s
 urlFragment: azure-monitor-opencensus-python
 ---
 
-# Correlated End-To-End Azure Function (Python) Instrumentation Opencensus 
+# Correlated End-To-End Azure Function (Python) Instrumentation with Opencensus 
 
 ## Overview
 
@@ -80,3 +80,6 @@ The goal of this code sample is to demonstrate an alternative (custom) approach 
 
 1. Start the Azure Function host: `func host start`
 1. Send HTTP request. `curl http://localhost:[PORT]/api/instrumentation`
+
+## Contributors
+[Oliver Lintner](https://github.com/se02035)  
