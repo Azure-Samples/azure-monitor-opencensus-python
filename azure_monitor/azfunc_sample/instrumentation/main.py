@@ -24,10 +24,4 @@ def main(req: func.HttpRequest, context: func.Context) -> func.HttpResponse:
     """
     logger.info("Python HTTP trigger function processed a request.")
 
-    if context.tracer is not None:  # type: ignore[attr-defined]
-        # ensure the opencensus execution context use
-        # the Azure function tracer (ensures that log statements)
-        # have the correct correlaton (operation) id
-        execution_context.set_opencensus_tracer(context.tracer)  # type: ignore[attr-defined]
-
     return FunctionLogic.run(req)
