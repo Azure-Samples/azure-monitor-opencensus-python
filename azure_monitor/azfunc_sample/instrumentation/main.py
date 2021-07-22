@@ -1,6 +1,5 @@
 import azure.functions as func
 from opencensus.extension.azure.functions import OpenCensusExtension
-from opencensus.trace import execution_context
 
 from .globals import INSTRUMENTATION_KEY, callback_add_role_name, getLogger
 from .instrumentation_func import FunctionLogic
