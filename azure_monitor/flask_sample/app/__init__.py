@@ -1,2 +1,2 @@
-from .app import app, db, logger
+from .app import app, db
 from . import routes

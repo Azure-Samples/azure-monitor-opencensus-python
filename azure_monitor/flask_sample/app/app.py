@@ -7,8 +7,6 @@ from flask_sample.config import Config
 from opencensus.ext.azure import metrics_exporter
 from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 
-logger = logging.getLogger(__name__)
-
 
 def create_app(conf: Config) -> Flask:
     """Create the flask app
