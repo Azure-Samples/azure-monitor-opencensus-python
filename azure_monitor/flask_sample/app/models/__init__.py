@@ -1,4 +1,4 @@
-from app import db
+from flask_sample.app import db
 
 
 class Todo(db.Model):

@@ -3,10 +3,10 @@ import requests
 
 from flask import flash, make_response, redirect, render_template, request, url_for
 
-from app import app, db, logger
-from app.forms import ToDoForm
-from app.metrics import mmap, request_measure, tmap
-from app.models import Todo
+from .app import app, db, logger
+from .forms import ToDoForm
+from .metrics import mmap, request_measure, tmap
+from .models import Todo
 
 # Hitting any endpoint will track an incoming request (requests)
 
