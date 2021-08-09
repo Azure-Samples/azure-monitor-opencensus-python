@@ -7,11 +7,11 @@ from opencensus.trace import config_integration
 from opencensus.ext.azure.log_exporter import AzureLogHandler
 
 
-INSTRUMENTATION_KEY = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
+AI_CONNECTION_STRING = os.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING")
 
-if not INSTRUMENTATION_KEY:
+if not AI_CONNECTION_STRING:
     raise EnvironmentError(
-        "Instrumentation Key not set. Set it through the environment variable: APPINSIGHTS_INSTRUMENTATIONKEY."
+        "AI Connection string not set. Set it through the environment variable: APPLICATIONINSIGHTS_CONNECTION_STRING."
     )
 
 WEBSITE_SITE_NAME = os.getenv("WEBSITE_SITE_NAME")
@@ -40,7 +40,7 @@ def callback_add_role_name(envelope):
 
 def getLogger(
     name: str,
-    instrumentation_conn_string: str = INSTRUMENTATION_KEY,
+    instrumentation_conn_string: str = AI_CONNECTION_STRING,
     propagate: bool = False,
 ) -> Logger:
     """Get a new logging instance with a handler to send logs to Application Insights

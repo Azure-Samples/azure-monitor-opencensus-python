@@ -12,9 +12,9 @@ urlFragment: azure-monitor-opencensus-python
 
 ## Overview
 
-Azure Function (Python) already supports instrumentaton using Opencensus. Unfortunately, the current out-of-the-box (OOTB) implementation/support has some flaws (see below), which make it difficult to get a correlated end-to-end view of a single function invocation (in Azure Monitor/Application Insights).
-
-It is also important to assign the correct cloud role name and cloud instance name to different log records sent to Application Insights (for additional insights). This is especially relevant for distributed, scalable applications sending logs to a single Application Insights instance.
+Azure Function (Python) already supports instrumentation using Opencensus. The following sample utilizes the OpenCensus Functions extension and enables additional common telemetry scenarios used by Azure Monitor and Functions users. Such scenarios include:
+- End-to-end view of a single function invocation (in Azure Monitor Application Insights)
+- Create an application topology view (application dependencies to support distributed tracing) using Azure Monitor Application Insight's Application Map (especially useful when working with distributed, scalable applications). 
 
 ### Example of a Correlated End-to-End Azure Function Invocation
 
@@ -32,22 +32,26 @@ Associated AI Application Map:
 
 The images shows the following elements:
 
-- Correlated (per Azure Function invocatio) log information incl
+- Correlated (per Azure Function invocation) log information including:
     - Incoming request information
-    - Appication traces & error messages
-    - External dependencies (IN-PROC & HTTP using Python's requests)
+    - Application traces & error messages
+    - External dependencies (IN-PROC & HTTP using Python's `requests` library)
 - Application Map (defined cloud role and cloud instance values)
 
-### Known Limitations in Current OOTB Logging Integration (Azure Function)
+### Additional Customizations Enabling Azure Monitor Scenarios
 
-- External dependency log records don't have the correct *Cloud Role Name* (field: cloud_RoleName). This results in wrong information displayed in Application Insight's *Application Map*. See <https://github.com/census-instrumentation/opencensus-python/issues/1052>
-- Errors (logged with the OOTB logging integration) are not correctly logged as Application Insights Exception records. Currently `logging.exception(..)` creates a trace record (with severity level 3 = Error). This comes with certain side effects: E.g. errors are won't show up in Application Insights dashboard (*Failures*) and troubleshooting becomes harder (see issue <https://github.com/Azure/azure-functions-python-worker/issues/866>)
+- In order to get the application topology (Application Insight's Application Map) the correct *Cloud Role Name* (field: cloud_RoleName) must be set (using a [Telemetry Processor](https://docs.microsoft.com/en-us/azure/azure-monitor/app/api-filtering-sampling#opencensus-python-telemetry-processors))
+
+### Known Limitations in Current OpenCensus Azure Monitor Log Exporter
+
+- Errors (logged using the OpenCensus Azure Monitor Log Exporter) are logged as Application Insights Trace records (e.g. `logging.exception(..)` creates a trace record (with severity level 3 = Error)). Since errors don't result in a not logged as Application Insights Exceptions log record, errors don't show up in the Application Insights dashboard (*Failures* tab) - see issue <https://github.com/Azure/azure-functions-python-worker/issues/866>)
+- Logs are not correlated when crossing API boundaries (distributed tracing).
 
 ## Goal 
 
-The goal of this code sample is to demonstrate an alternative (custom) approach of instrumenting Azure Function code using Opencensus. This should give developers more insights how to use Opencensus and how to overcome the limitations of the OOTB implementation.
+The goal of this code sample is to demonstrate an alternative (custom) approach of instrumenting Azure Function code using Opencensus. This should give developers more insights how to use Opencensus and how to customize monitoring integration (based on the OpenCensus Azure Monitor Log Exporter).
 
-> *Important. Once the issues (see below) are resolved in the platform, it is recommended to move to the OOTB implementation!* 
+> *Important. Once the issues (see below) are resolved in the platform, it is recommended to move to updated OpenCensus Azure Monitor Log Exporter implementation!* 
 
 ## Run Locally
 
