@@ -5,8 +5,10 @@ from opencensus.trace import config_integration
 
 from .config import Config
 
+# Trace integrations for: requests, logging, sqlalchemy libraries
+# using the configured tracer instance
 config_integration.trace_integrations(
-    ["logging", "requests", "sqlalchemy"], tracer=Config.TRACER
+    ["requests", "logging" ,"sqlalchemy"], tracer=Config.TRACER
 )
 
 
