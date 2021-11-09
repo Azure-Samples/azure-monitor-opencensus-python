@@ -59,7 +59,7 @@ class AppLogger:
         )
         app_insights_cs = "InstrumentationKey=" + self._get_app_insights_key()
         log_handler = AzureLogHandler(
-            connection_string=app_insights_cs, export_interval=0.0
+            connection_string=app_insights_cs, export_interval=5.0
         )
         log_handler.add_telemetry_processor(self._get_callback(component_name))
         log_handler.name = self.HANDLER_NAME
