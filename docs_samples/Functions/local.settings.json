@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "DBHOST": "python-appinsights-{SUFFIX}-mysql.mysql.database.azure.com",
+    "DBNAME": "python",
+    "DBUSER": "wsuser@python-appinsights-{SUFFIX}-mysql",
+    "DBPASS": "{PASSWORD}",
+    "AZURE_STORAGE_CONNECTION_STRING" : "{AZURE_STORAGE_CONNECTION_STRING}",
+    "AzureWebJobsStorage" : "UseDevelopmentStorage=true"
+  }
+}

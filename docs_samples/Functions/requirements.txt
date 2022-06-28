@@ -1,0 +1,10 @@
+opencensus
+opencensus-ext-logging
+opencensus-ext-azure
+opencensus-extension-azure-functions
+opencensus-ext-requests
+azure-functions
+mysql-connector-python
+pyodbc
+azure-storage-blob
+psutil
