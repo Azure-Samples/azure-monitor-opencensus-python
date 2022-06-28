@@ -1,9 +1,5 @@
 # Getting Stared with App Insights for Python
 
-TODO - https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python
-
-TODO - TAKEOVER - https://github.com/Azure-Samples/azure-monitor-opencensus-python
-
 This procedure configures your Python application to send telemtery tot he Application Insights feature of the Azure Monitor service.  It works with any Python application on-premises or in the cloud.
 
 ## Prerequisites
