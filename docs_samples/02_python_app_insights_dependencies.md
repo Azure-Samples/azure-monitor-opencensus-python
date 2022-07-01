@@ -8,7 +8,7 @@ You can utilize opencensus to send dependencies like database calls and other it
 
 ```powershell
 cd $home
-cd docs-python\WebApp
+cd docs-python\WebSample
 ```
 
 ```python
@@ -45,7 +45,7 @@ python -m pip install -r requirements.txt
   - Select your lab subscription and resource group
   - Select the **python-appinsights-SUFFIX** Application insights resource
   - Copy the connection string
-  - Open the `./WebApp/azureproject/settings.py` file
+  - Open the `./WebSample/azureproject/settings.py` file
   - Add the following line in the `MIDDLEWARE` section:
 
 ```python

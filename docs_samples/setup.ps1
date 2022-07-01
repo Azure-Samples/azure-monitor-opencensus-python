@@ -45,7 +45,7 @@ $content = $content.replace("{STORAGE_CONNECTION_STRING}",$dataLakeContext.Conne
 #$content = $content.replace("{FUNCTION_URL}","");
 set-content ".env" $content;
 
-$content = get-content "./WebApp/.env.example"
+$content = get-content "./WebSample/.env.example"
 $content = $content.replace("{INSIGHTS_KEY}",$appInsights.InstrumentationKey);
 $content = $content.replace("{INSIGHTS_CONNECTION_STRING}",$appInsights.ConnectionString);
 $content = $content.replace("{SUFFIX}",$suffix);
@@ -53,4 +53,4 @@ $content = $content.replace("{DBUSER}","wsuser");
 $content = $content.replace("{DBPASSWORD}","Microsoft123");
 $content = $content.replace("{STORAGE_CONNECTION_STRING}",$dataLakeContext.ConnectionString);
 #$content = $content.replace("{FUNCTION_URL}","");
-set-content "./WebApp/.env" $content;
+set-content "./WebSample/.env" $content;
