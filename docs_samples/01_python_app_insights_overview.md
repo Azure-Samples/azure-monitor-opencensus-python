@@ -194,7 +194,7 @@ When working with the [Python logging framework](https://docs.python.org/3/libra
 - debug
 - critical
 
-## Capture exceptions
+## Capture exceptions and custom dimensions
 
 - Switch back to your Visual Studio Code window
 - Select the `./SimpleApps/exception.py` file
