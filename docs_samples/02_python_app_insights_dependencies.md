@@ -110,7 +110,7 @@ requests
 - Expand **App Services**
 - Locate the target web app to deploy too, this will be **python-appinsights-SUFFIX-app**
   - If needed, select **Install extension to enable additional features**, then select **Install** to instal the Azure App Service extension
-- In Visual Studio Code, right-click the **WebApp** folder, select **Deploy to web app**
+- In Visual Studio Code, right-click the **WebSample** folder, select **Deploy to web app**
 - Selec the **python-appinsights-SUFFIX-app** web app
 - If prompted, select **Deploy**
 - Browse to the **python-appinsights-SUFFIX-app.azurewebsites.net** web site, the site should load successfully.
