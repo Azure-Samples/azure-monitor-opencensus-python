@@ -394,6 +394,26 @@
                             "value": "[concat(parameters('administratorLogin'),'@', 'python-appinsights-',  variables('uniqueSuffix'),'-mysql')]",
                             "slotSetting": false
                           },
+                          {
+                            "name": "PGDBHOST",
+                            "value": "[concat('python-appinsights-', variables('uniqueSuffix'), '-pg.postgres.database.azure.com')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBNAME",
+                            "value": "python",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBPASS",
+                            "value": "[parameters('administratorLoginPassword')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBUSER",
+                            "value": "[concat(parameters('administratorLogin'),'@', 'python-appinsights-',  variables('uniqueSuffix'),'-pg')]",
+                            "slotSetting": false
+                          },
                         {
                             "name": "STORAGE_ACCOUNT_NAME",
                             "value": "[concat('storage',  variables('uniqueSuffix'))]",
@@ -469,6 +489,10 @@
                             "name":"APPLICATIONINSIGHTS_CONNECTION_STRING",
                             "value":"[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).ConnectionString]"
                         },
+                        {
+                          "name": "AZURE_STORAGE_CONNECTION_STRING",
+                          "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', concat('storage', variables('uniqueSuffix')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix'))),'2017-06-01').keys[0].value)]"
+                      },
                         {
                             "name": "AzureWebJobsStorage",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', concat('storage', variables('uniqueSuffix')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix'))),'2017-06-01').keys[0].value)]"

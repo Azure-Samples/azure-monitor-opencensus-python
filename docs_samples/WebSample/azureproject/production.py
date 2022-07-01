@@ -25,15 +25,13 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ['DBNAME'],
-        'HOST': os.environ['DBHOST'],
-        'USER': os.environ['DBUSER'],
+        'NAME': os.environ['PGDBNAME'],
+        'HOST': os.environ['PGDBHOST'],
+        'USER': os.environ['PGDBUSER'],
         'OPTIONS': {'sslmode': 'require'},
-        'PASSWORD': os.environ['DBPASS'] 
+        'PASSWORD': os.environ['PGDBPASS'] 
     }
 }
-
-print('production:' + os.environ['DBPASS'])
 
 #load all the custom metrics...
 register_views()

@@ -5,10 +5,13 @@ import ssl
 import os, uuid
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
-
+from opencensus.extension.azure.functions import OpenCensusExtension
 from opencensus.trace import config_integration
 
 config_integration.trace_integrations(['mysql'])
+config_integration.trace_integrations(['requests'])
+
+OpenCensusExtension.configure()
 
 def main(myTimerFunction: func.TimerRequest) -> None:
     
