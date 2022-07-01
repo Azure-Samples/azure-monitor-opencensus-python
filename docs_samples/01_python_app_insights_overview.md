@@ -8,8 +8,8 @@ To get started with the following samples, you need to:
 
 - Install Python (version 3.9.x).
 - Install the latest version of Visual Studio Code with the following extensions.
-  - ms-python.python
-  - ms-azuretools.vscode-azurefunctions
+  - [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+  - [ms-azuretools.vscode-azurefunctions](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
 - Install [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools)
 - Create a [free Azure account](https://azure.microsoft.com/free/) if you don't already have an Azure subscription.
 - [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) (for local testing)
@@ -24,13 +24,15 @@ cd $home;
 
 rm -r python-appinsights -f
 
-git clone https://github.com/Azure-Samples/azure-monitor-opencensus-python docs-python
+git clone https://github.com/Azure-Samples/azure-monitor-opencensus-python python-appinsights
 ```
 
-- Open Visual Studio Code to the cloned directory
+- Open Visual Studio Code to the cloned repositiory
 - Open a new Windows PowerShell window, run the following:
 
 ```powershell
+cd docs_samples
+
 setup.ps1
 ```
 
@@ -44,6 +46,22 @@ setup.ps1
 - Check the **Allow Azure services and resources to access this server**
 - Select **Save**
 
+- Setup local MySQL connectivity
+  - Browse to the Azure Portal
+  - Select your lab subscription and resource group
+  - Select the **python-appinsights-SUFFIX-mysql** MySQL resource
+  - Under **Settings**, select **Connection security**
+  - Select **Add client IP**
+  - Select **Save**
+
+- Setup local PostgresSQL connectivity
+  - Browse to the Azure Portal
+  - Select your lab subscription and resource group
+  - Select the **python-appinsights-SUFFIX-mysql** PostgreSQL resource
+  - Under **Settings**, select **Connection security**
+  - Select **Add client IP**
+  - Select **Save**
+
 ## Configure the environment (Visual Studio Code)
 
 - Open Visual Studio code, select the **Extensions** tab
@@ -56,9 +74,7 @@ setup.ps1
 - In Visual Studio Code, open a Terminal window, run the following command:
 
 ```powershell
-python --version
-
-pip install --upgrade pip
+python.exe --version
 ```
 
 - For Python, make sure you see version 3.9.x.  If you do not, do the following:
@@ -78,7 +94,7 @@ py -3 -m venv .venv
 ```
 
 - When prompted, select **yes**
-- Ensure that you select the new environment in the interpertor selection
+- Ensure that you select the new environment in the interpertor selection otherwise the python commands you run later may not map to the proper python version.
 
 ## Install OpenCensus
 
@@ -91,14 +107,14 @@ To install OpenCensus:
 - Open a terminal window, run the following:
 
 ```powershell
-pip install --upgrade pip
+python -m pip install --upgrade pip
 
 python -m pip install opencensus
 ```
 
 ## Install Azure exporter
 
-OpenCensus needs an exporter to know how to send the log and metric data to a specific backend.  Azure provides an exporter for Azure Monitor.
+OpenCensus needs an exporter to know how to send the log and metric data to a specific backend.  Azure provides an exporter for Azure Monitor and Log Analytics.
 
 To install the Azure monitor exporter package:
 
@@ -111,7 +127,6 @@ python -m pip install opencensus-extension-azure-functions
 python -m pip install opencensus-ext-requests
 python -m pip install pyodbc
 python -m pip install psutil
-
 ```
 
 ## Configure middleware to track requests
@@ -119,16 +134,12 @@ python -m pip install psutil
 - Browse to the Azure Portal
 - Select the Application Insights **python-appinsights-SUFFIX** resource
 - On the **Overview** page, copy the connection string
-- Copy the `.\docs_sampes\env.template` file and rename it to `.env`
-- In the new `.env` file, paste the copied value into the `APPLICATIONINSIGHTS_CONNECTION_STRING` value
+- Open the `.\docs_sampes\.env` file notice that as part of the setup the values have been copied into the environment file
 
 ## Create a simple Python App
 
-- Browse to the Azure Portal.
-- Select your Azure Monitor resource.
-- On the **Overview** page, copy the connection string and save it for later.
 - Create a new python file called `app.py`.
-- Copy the following into it, be sure to replace your Application Insights connection string:
+- Copy the following into it, be sure to replace your Application Insights connection string that you copied above:
 
 ```python
 import logging
@@ -168,7 +179,7 @@ traces
 
 ## Sending trace data
 
-- Open the `./SimpleApps/trace.py` file
+- Open the `./docs_samples/SimpleApps/trace.py` file, notice that the connection string is being pulled from an environment variable rather than being hard coded.
 - Press **F5** to run the file
 - Switch to the Azure Portal
 - Browse to your lab resource group
@@ -211,11 +222,23 @@ exceptions
 
 ## Utilize custom events and metrics
 
+- Start the Azure Storage Emulator
 - Switch to Visual Studio Code
-- Open a terminal window, run the following commands, be sure to replace the `SUFFIX`:
+- Open a terminal window, run the following commands to start the Python functions locally:
 
 ```powershell
-cd Functions
+cd .\docs_samples\Functions
+
+python -m pip install -r requirements.txt
+
+func start
+```
+
+- Browse to the HTTP function endpoint `http://localhost:7071/api/MyHttpFunction`
+- Run the following command to deploy the function apps to Azure. Be sure to replace the `SUFFIX` below (you can find it in the deployed Azure Portal resource group or in the `.\docs_samples\suffix.txt` file that was generated by the setup script):
+
+```powershell
+cd .\docs_samples\Functions
 
 az login
 
@@ -231,3 +254,5 @@ func azure functionapp publish python-appinsights-SUFFIX
 - Under **Functions**, select **Functions**, you should see the two python function apps deployed
 
 > **NOTE** Azure Function runtimes support various Python versions depending on the version selected.  See [Languages by runtime version](https://docs.microsoft.com/en-us/azure/azure-functions/supported-languages#languages-by-runtime-version).
+
+- Review the function app code.  Notice the usage of the a storage account and a call to the database.

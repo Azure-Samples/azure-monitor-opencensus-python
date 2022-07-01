@@ -6,6 +6,9 @@ import os, uuid
 import pathlib
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
+from opencensus.trace import config_integration
+
+config_integration.trace_integrations(['mysql'])
 
 def main(myHttpFunction: func.HttpRequest) -> func.HttpResponse:
     

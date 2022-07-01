@@ -1,6 +1,6 @@
 # Capture Dependencies
 
-You can utilize opencensus to send dependencies like database calls and other items to Application Insights.  This is an example of how to add the various settings to a Django application to do exactly that.
+You can utilize opencensus to send dependencies like database calls and other items to Application Insights.  This is an example of how to add the various settings to a Django application to do exactly that.  You will run the samples both locally and deploy the Django web application to the Azure App Service resource you deployed as part of the setup script.
 
 ## Configuring Django applications
 
@@ -23,14 +23,6 @@ python -m pip install -r requirements.txt
 - The following items have been done for you in the ARM template:
   - System assigned managed identity for the app service is enabled
   - Storage Blob Data Contributor has been assigned to the managed identity
-
-- Update the `.env` file with the PostgreSQL and storage settings, be sure to replace `SUFFIX` and `PASSWORD`:
-  - Set DBNAME = `python`
-  - Set DBHOST = `python-appinsights-SUFFIX-pg.postgres.database.azure.com`
-  - Set DBUSER = `wsuser@python-appinsights-SUFFIX-pg`
-  - Set DBPASS = `PASSWORD`
-  - STORAGE_ACCOUNT_NAME = `storageSUFFIX`
-  - STORAGE_CONTAINER_NAME = `photos`
 
 - Setup local PostgreSQL connectivity
   - Browse to the Azure Portal

@@ -6,6 +6,10 @@ import os, uuid
 
 from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
 
+from opencensus.trace import config_integration
+
+config_integration.trace_integrations(['mysql'])
+
 def main(myTimerFunction: func.TimerRequest) -> None:
     
     logging.info('Python Timer trigger function processed a request.')
