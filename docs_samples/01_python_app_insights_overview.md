@@ -1,6 +1,6 @@
 # Getting Stared with App Insights for Python
 
-This procedure configures your Python application to send telemtery tot he Application Insights feature of the Azure Monitor service.  It works with any Python application on-premises or in the cloud.
+This procedure configures your Python application to send telemetry to the Application Insights feature of the Azure Monitor service with the OpenCensus Azure monitor exporters.  It works with any Python application on-premises or in the cloud.
 
 ## Prerequisites
 
