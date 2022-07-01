@@ -95,7 +95,7 @@ python -m pip install opencensus
 
 OpenCensus needs an exporter to know how to send the log and metric data to a specific backend.  Azure provides an exporter for Azure Monitor.
 
-To install the Azure Exporter:
+To install the Azure monitor exporter package:
 
 - Open a terminal window, run the following:
 
