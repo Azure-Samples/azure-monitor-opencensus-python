@@ -1,4 +1,4 @@
-# Getting Stared with App Insights for Python
+# Getting Started with App Insights for Python via OpenCensus Azure monitor exporters
 
 This procedure configures your Python application to send telemetry to the Application Insights feature of the Azure Monitor service with the OpenCensus Azure monitor exporters.  It works with any Python application on-premises or in the cloud.
 
