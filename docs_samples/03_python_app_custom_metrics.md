@@ -1,6 +1,6 @@
 # Capture Custom Metrics
 
-Custom metrics are helpful for reporting on specific metric values from your application.  These are typically made up of the metric name and the value.  This data will then be placed into the `customerMetrics` table in Application Insights.
+Custom metrics are helpful for reporting on specific metric values from your application.  These are typically made up of the metric name and the value.  This data will then be placed into the `customMetrics` table in Application Insights.
 
 ## Simple Application
 

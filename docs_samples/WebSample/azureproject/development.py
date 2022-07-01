@@ -5,6 +5,7 @@ from azureproject.app_insights import *
 from opencensus.trace import config_integration
 
 config_integration.trace_integrations(['postgresql'])
+config_integration.trace_integrations(['requests'])
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
