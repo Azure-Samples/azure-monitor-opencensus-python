@@ -4,7 +4,7 @@ This procedure configures your Python application to send telemetry to the Appli
 
 ## Prerequisites
 
-To work with App Insights for Python, you need to:
+To get started with the following samples, you need to:
 
 - Install Python (version 3.9.x).
 - Install the latest version of Visual Studio Code with the following extensions.
