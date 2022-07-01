@@ -24,12 +24,17 @@ cd $home;
 
 rm -r python-appinsights -f
 
-git clone https://github.com/solliancenet/docs-python docs-python
+git clone https://github.com/Azure-Samples/azure-monitor-opencensus-python docs-python
 ```
 
-- Open the Azure Portal
-- Create a new resource group
-- Run the `./Artifacts/template.json` file
+- Open Visual Studio Code to the cloned directory
+- Open a new Windows PowerShell window, run the following:
+
+```powershell
+setup.ps1
+```
+
+- This will deploy the ARM template that contains all the necesary resources needed to run these samples.  It will also update the environment files with the specific connection string details.
 
 ## Configure the environment (Azure)
 
@@ -112,9 +117,10 @@ python -m pip install psutil
 ## Configure middleware to track requests
 
 - Browse to the Azure Portal
-- Select your Azure Monitor resource
+- Select the Application Insights **python-appinsights-SUFFIX** resource
 - On the **Overview** page, copy the connection string
-- Open the `.env` file and paste it into the `APPLICATIONINSIGHTS_CONNECTION_STRING` value
+- Copy the `.\docs_sampes\env.template` file and rename it to `.env`
+- In the new `.env` file, paste the copied value into the `APPLICATIONINSIGHTS_CONNECTION_STRING` value
 
 ## Create a simple Python App
 
@@ -181,18 +187,6 @@ traces
   ![The query is displayed with one result from the above program.](./media/python_simple_trace_trace.png "Review the results of the query.")
 
 - For your trace item notice that some of the columns are empty, but others (such as `cloud_RoleName`, `cloud_RoleInstance` and `client_*`) are populated based on the client information from the SDK.
-
-## Logger methods
-
-When working with the [Python logging framework](https://docs.python.org/3/library/logging.html), you should take note of the following methods:
-
-- addHandler
-- warning
-- exception
-- setLevel
-- info
-- debug
-- critical
 
 ## Capture exceptions and custom dimensions
 

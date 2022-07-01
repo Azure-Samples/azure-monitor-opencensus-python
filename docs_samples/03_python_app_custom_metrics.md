@@ -2,13 +2,6 @@
 
 Custom metrics are helpful for reporting on specific metric values from your application.  These are typically made up of the metric name and the value.  This data will then be placed into the `customerMetrics` table in Application Insights.
 
-There are two types of metrics that can be sent to Application Insights via the [TrackMetric API](https://docs.microsoft.com/en-us/azure/azure-monitor/app/api-custom-events-metrics#trackmetric):
-
-- Single Value - Each time the value is set to Application Inights.
-- Aggregation - An aggregation of the values from your application.  
-
-Each time a call is made to `trackMetric` a new row is generated in Application Insights.
-
 ## Simple Application
 
 - Open the `./SimpleApps/metric.py` file
