@@ -16,7 +16,7 @@ To get started with the following samples, you need to:
 
 ## Deploy the environment
 
-- Open a Windows PowerShell window
+- Open a Windows PowerShell window.
 - Run the following:
 
 ```Powershell
@@ -27,7 +27,7 @@ rm -r python-appinsights -f
 git clone https://github.com/Azure-Samples/azure-monitor-opencensus-python python-appinsights
 ```
 
-- Open Visual Studio Code to the cloned repositiory
+- Open Visual Studio Code to the cloned repositiory.
 - Open a new Windows PowerShell window, run the following:
 
 ```powershell
@@ -40,33 +40,33 @@ setup.ps1
 
 ## Configure the environment (Azure)
 
-- In the Azure Portal, browse to the `python-insights-SUFFIX` Azure Database for SQL
-- Under **Security**, select **Networking**
-- Under **Firewall rules**, select to **Add your client IPv4 address(xx.xx.xx.xx)**
-- Check the **Allow Azure services and resources to access this server**
-- Select **Save**
+- In the Azure Portal, browse to the `python-insights-SUFFIX` Azure Database for SQL.
+- Under **Security**, select **Networking**.
+- Under **Firewall rules**, select to **Add your client IPv4 address(xx.xx.xx.xx)**.
+- Check the **Allow Azure services and resources to access this server**.
+- Select **Save**.
 
 - Setup local MySQL connectivity
-  - Browse to the Azure Portal
-  - Select your lab subscription and resource group
-  - Select the **python-appinsights-SUFFIX-mysql** MySQL resource
-  - Under **Settings**, select **Connection security**
-  - Select the **Yes** toggle for the **Allow access to Azure Services**
-  - Select **Add client IP**
-  - Select **Save**
+  - Browse to the Azure Portal.
+  - Select your lab subscription and resource group.
+  - Select the **python-appinsights-SUFFIX-mysql** MySQL resource.
+  - Under **Settings**, select **Connection security**.
+  - Select the **Yes** toggle for the **Allow access to Azure Services**.
+  - Select **Add client IP**.
+  - Select **Save**.
 
 - Setup local PostgresSQL connectivity
-  - Browse to the Azure Portal
-  - Select your lab subscription and resource group
-  - Select the **python-appinsights-SUFFIX-mysql** PostgreSQL resource
-  - Under **Settings**, select **Connection security**
-  - Select the **Yes** toggle for the **Allow access to Azure Services**
-  - Select **Add client IP**
-  - Select **Save**
+  - Browse to the Azure Portal.
+  - Select your lab subscription and resource group.
+  - Select the **python-appinsights-SUFFIX-mysql** PostgreSQL resource.
+  - Under **Settings**, select **Connection security**.
+  - Select the **Yes** toggle for the **Allow access to Azure Services**.
+  - Select **Add client IP**.
+  - Select **Save**.
 
 ## Configure the environment (Visual Studio Code)
 
-- Open Visual Studio code, select the **Extensions** tab
+- Open Visual Studio code, select the **Extensions** tab.
 - Ensure the following extensions are installed:
   - ms-python.python
   - ms-azuretools.vscode-azurefunctions
@@ -80,11 +80,11 @@ python.exe --version
 ```
 
 - For Python, make sure you see version 3.9.x.  If you do not, do the following:
-  - Download Python and change your path variables to point to the proper version
-  - Restart Visual Studio Code
-- Open the command palette by selecting **View->Command Pallet**
-- Run the `Python: Select interperter` command
-- Select the `Python 3.9.x` version
+  - Download Python and change your path variables to point to the proper version.
+  - Restart Visual Studio Code.
+- Open the command palette by selecting **View->Command Pallet**.
+- Run the `Python: Select interperter` command.
+- Select the `Python 3.9.x` version.
 
 ## Create a Python environment
 
@@ -95,7 +95,7 @@ py -3 -m venv .venv
 .venv\scripts\activate
 ```
 
-- When prompted, select **yes**
+- When prompted, select **yes**.
 - Ensure that you select the new environment in the interpertor selection otherwise the python commands you run later may not map to the proper python version.
 
 ## Install OpenCensus
@@ -116,7 +116,7 @@ python -m pip install opencensus
 
 ## Install Azure exporter
 
-OpenCensus needs an exporter to know how to send the log and metric data to a specific backend.  Azure provides an exporter for Azure Monitor.
+OpenCensus needs an exporter to know how to send the log, metric and tracing data to a specific backend.  Azure provides an exporter for Azure Monitor and Log Analytics.
 
 To install the Azure monitor exporter package:
 
@@ -133,10 +133,10 @@ python -m pip install psutil
 
 ## Configure middleware to track requests
 
-- Browse to the Azure Portal
-- Select the Application Insights **python-appinsights-SUFFIX** resource
-- On the **Overview** page, copy the connection string
-- Open the `.\docs_samples\.env` file notice that as part of the setup the values have been copied into the environment file
+- Browse to the Azure Portal.
+- Select the Application Insights **python-appinsights-SUFFIX** resource.
+- On the **Overview** page, copy the connection string.
+- Open the `.\docs_samples\.env` file notice that as part of the setup the values have been copied into the environment file.  Be sure to verify that the values match.
 
 ## Create a simple Python App
 
@@ -155,9 +155,9 @@ logger.addHandler(AzureLogHandler(connection_string='InstrumentationKey=<your-in
 logger.warning('Hello, World!')
 ```
 
-- Press **F5** to run the file, select **Python file** in the debug configuration window
+- Press **F5** to run the file, select **Python file** in the debug configuration window.
 - If you get an error about `psutil._psutil_windows` do the following:
-  - Open the `.venv\Lib\site-packages` folder and delete the `psutil` and `psutil-5.9.1.dist-info` folders
+  - Open the `.venv\Lib\site-packages` folder and delete the `psutil` and `psutil-5.9.1.dist-info` folders.
   - Then run the following:
 
     ```Python
@@ -165,8 +165,8 @@ logger.warning('Hello, World!')
     python -m pip install psutil
     ```
 
-- Switch to the Azure Portal, navigate to your Application Insights resource
-- Under **Monitoring**, select **Logs**
+- Switch to the Azure Portal, navigate to your Application Insights resource.
+- Under **Monitoring**, select **Logs**.
 - Run the following kusto query:
 
 ```kusto
@@ -182,11 +182,11 @@ traces
 ## Sending trace data
 
 - Open the `./docs_samples/SimpleApps/trace.py` file, notice that the connection string is being pulled from an environment variable rather than being hard coded.
-- Press **F5** to run the file
-- Switch to the Azure Portal
-- Browse to your lab resource group
-- Browse to the `python-appinsights-SUFFIX` application insights resource and select it
-- Under **Monitoring**, select **Logs**
+- Press **F5** to run the file.
+- Switch to the Azure Portal.
+- Browse to your lab resource group.
+- Browse to the `python-appinsights-SUFFIX` application insights resource and select it.
+- Under **Monitoring**, select **Logs**.
 - Run the following Kusto query to see the `traces` sent to application insights:
 
 ```kql
@@ -203,13 +203,13 @@ traces
 
 ## Capture exceptions and custom dimensions
 
-- Switch back to your Visual Studio Code window
-- Select the `./SimpleApps/properties.py` file
-- Press **F5** to run the file, select **Python file** in the debug configuration window
-- Switch to the Azure Portal
-- Browse to your lab resource group
-- Browse to the `python-appinsights-SUFFIX` application insights resource and select it
-- Under **Monitoring**, select **Logs**
+- Switch back to your Visual Studio Code window.
+- Select the `./SimpleApps/properties.py` file.
+- Press **F5** to run the file, select **Python file** in the debug configuration window.
+- Switch to the Azure Portal.
+- Browse to your lab resource group.
+- Browse to the `python-appinsights-SUFFIX` application insights resource and select it.
+- Under **Monitoring**, select **Logs**.
 - Run the following Kusto query to see the `exception` sent to application insights:
 
 ```kql
