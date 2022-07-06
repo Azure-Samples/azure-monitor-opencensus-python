@@ -6,7 +6,7 @@ This procedure configures your Python application to send telemetry to the Appli
 
 To get started with the following samples, you need to:
 
-- Install Python (version 3.9.x).
+- Install Python (all of the samples have been tested to work with version 3.9.x and the Azure resources are deployed using 3.9).
 - Install the latest version of Visual Studio Code with the following extensions.
   - [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
   - [ms-azuretools.vscode-azurefunctions](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
@@ -204,7 +204,7 @@ traces
 ## Capture exceptions and custom dimensions
 
 - Switch back to your Visual Studio Code window
-- Select the `./SimpleApps/exception.py` file
+- Select the `./SimpleApps/properties.py` file
 - Press **F5** to run the file, select **Python file** in the debug configuration window
 - Switch to the Azure Portal
 - Browse to your lab resource group
@@ -215,10 +215,9 @@ traces
 ```kql
 exceptions
 | sort by timestamp
-| where cloud_RoleName == "exception.py"
+| where cloud_RoleName == "properties.py"
 ```
 
 - Expand your exception item, notice the `details` column has the exception details you would expect, but also expand the `customDimensions` column to review the custom data that was sent to the application insights table.
 
   ![The query is displayed with one result from the above program.](./media/python_simple_exception_custom.png "Review the results of the query.")
-

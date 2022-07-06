@@ -1,6 +1,10 @@
 # Capture Dependencies
 
-You can utilize opencensus to send dependencies like database calls and other items to Application Insights.  This is an example of how to add the various settings to a Django application to do exactly that.  You will run the samples both locally and deploy the Django web application to the Azure App Service resource you deployed as part of the setup script.
+You can utilize opencensus to send dependencies like database calls and other log supporting items to Application Insights automatically.
+
+## Configuring Function Apps
+
+This is an example of how to add the various settings to an Azure Function application to send dependencies calls to Azure Monitor.  You will run the samples both locally and deploy the Azure Functions to an Azure App Service resource you deployed as part of the setup script.
 
 ## Utilize Function Apps with OpenCensus
 
@@ -48,6 +52,8 @@ dependencies
 - You should see the dependencies displayed for the calls to MySQL and Azure storage displayed.
 
 ## Configuring Django applications
+
+This next example shows how to add the various OpenCensus settings to a Django application to send logging and metric data to Azure Monitor.  You will run the samples both locally and deploy the Django web application to the Azure App Service resource you deployed as part of the setup script.
 
 - Run the following commands to setup the environment:
 

@@ -64,3 +64,12 @@ $content = $content.replace("{DBPASSWORD}","Microsoft123");
 $content = $content.replace("{STORAGE_CONNECTION_STRING}",$dataLakeContext.ConnectionString);
 #$content = $content.replace("{FUNCTION_URL}","");
 set-content "./Functions/local.settings.json" $content;
+
+#copy over the opencensus git repo...
+#download the git repo...
+Write-Host "Download Git repo." -ForegroundColor Green -Verbose
+git clone https://github.com/census-instrumentation/opencensus-python opencensus-python
+
+#copy the example files to the "simpleapps" folder
+copy ./opencensus-python/contrib/opencensus-ext-azure/examples/*/*.py ./docs_samples/SimpleApps
+
