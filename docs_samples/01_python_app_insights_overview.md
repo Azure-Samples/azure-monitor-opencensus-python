@@ -102,7 +102,7 @@ py -3 -m venv .venv
 
 [OpenCensus](https://opencensus.io/) is a set of open source libraries hosted on [GitHub](https://github.com/census-instrumentation) that are used to capture trace and metric data from applications.
 
-Metrics can be things like latency, HTTP request and reponse lengths whereas traces are how a request moves through your application layers and other services. Graphs can be built to show how an application or service is performing based on these data points.
+Metrics can be things like latency, HTTP request and reponse lengths whereas distributed tracing shows how a request moves through your application layers and other services. Log data represents user generated logs that can be enriched with context and custom dimensions. Graphs can be built to show how an application or service is performing based on these data points.
 
 To install OpenCensus:
 
