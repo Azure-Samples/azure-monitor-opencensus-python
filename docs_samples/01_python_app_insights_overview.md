@@ -136,7 +136,7 @@ python -m pip install psutil
 - Browse to the Azure Portal
 - Select the Application Insights **python-appinsights-SUFFIX** resource
 - On the **Overview** page, copy the connection string
-- Open the `.\docs_sampes\.env` file notice that as part of the setup the values have been copied into the environment file
+- Open the `.\docs_samples\.env` file notice that as part of the setup the values have been copied into the environment file
 
 ## Create a simple Python App
 
