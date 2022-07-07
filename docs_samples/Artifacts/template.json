@@ -1,0 +1,631 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "type": "String",
+            "defaultValue": "wsuser",
+            "metadata": { "description": "" }
+          },
+          "administratorLoginPassword": {
+            "type": "String",
+            "defaultValue": "Microsoft123",
+            "metadata": { "description": "" }
+          },
+          "vmSize": { "defaultValue": "Standard_E2s_v3", "type": "string" },
+          "suffix": {
+            "type": "String"
+          }
+    },
+    "variables": {
+        "uniqueSuffix": "[parameters('suffix')]",
+        "sqlDBName": "python"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "[guid(concat(resourceGroup().id, '-app'))]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+                "principalId": "[reference(concat('Microsoft.Web/sites/', concat('python-appinsights-', variables('uniqueSuffix'), '-app')), '2016-08-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites/', concat('python-appinsights-', variables('uniqueSuffix'), '-app'))]"
+            ]
+        },
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "[guid(concat(resourceGroup().id, '-app2'))]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'ba92f5b4-2d11-453d-a403-e96b0029c9fe')]",
+                "principalId": "[reference(concat('Microsoft.Web/sites/', concat('python-appinsights-', variables('uniqueSuffix'))), '2016-08-01', 'Full').identity.principalId]",
+                "principalType": "ServicePrincipal"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Web/sites/', concat('python-appinsights-', variables('uniqueSuffix')))]"
+            ]
+        },
+        {
+            "type": "Microsoft.DBforPostgreSQL/servers",
+            "apiVersion": "2017-12-01",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'), '-pg')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+              "name": "B_Gen5_1",
+              "tier": "Basic",
+              "capacity": 1,
+              "size": 51200,
+              "family": "Gen5"
+            },
+            "properties": {
+              "createMode": "Default",
+              "version": "11",
+              "administratorLogin": "[parameters('administratorLogin')]",
+              "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+              "storageProfile": {
+                "storageMB": 51200,
+                "backupRetentionDays": 7,
+                "geoRedundantBackup": "Disabled"
+              }
+            },
+            "resources": [
+                {
+                  "apiVersion": "2017-12-01",
+                  "name": "python",
+                  "type": "databases",
+                  "location": "[resourceGroup().location]",
+                  "tags": {
+                    "displayName": "python"
+                  },
+                  "dependsOn": [
+                    "[resourceId('Microsoft.DBforPostgreSQL/servers', concat('python-appinsights-', variables('uniqueSuffix'), '-pg'))]"
+                  ],
+                  "properties": {
+                  }
+                }
+            ]
+          },
+          {
+            "type": "Microsoft.DBforPostgreSQL/servers/firewallRules",
+            "apiVersion": "2017-12-01",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'), '-pg', '/Azure')]",
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.DBforPostgreSQL/servers', concat('python-appinsights-', variables('uniqueSuffix'), '-pg'))]"
+            ]
+          },
+        {
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2021-08-01-preview",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'))]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+              "administratorLogin": "[parameters('administratorLogin')]",
+              "administratorLoginPassword": "[parameters('administratorLoginPassword')]"
+            }
+          },
+          {
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2021-08-01-preview",
+            "name": "[format('{0}/{1}', concat('python-appinsights-', variables('uniqueSuffix')), variables('sqlDBName'))]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+              "name": "Standard",
+              "tier": "Standard"
+            },
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', concat('python-appinsights-', variables('uniqueSuffix')))]"
+            ]
+          },
+        {
+            "type": "microsoft.operationalinsights/workspaces",
+            "apiVersion": "2021-12-01-preview",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'))]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "sku": {
+                    "name": "pergb2018"
+                },
+                "retentionInDays": 30,
+                "features": {
+                    "enableLogAccessUsingOnlyResourcePermissions": true
+                },
+                "workspaceCapping": {
+                    "dailyQuotaGb": -1
+                },
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
+            "type": "microsoft.insights/components",
+            "apiVersion": "2020-02-02",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'))]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('microsoft.operationalinsights/workspaces', concat('python-appinsights-', variables('uniqueSuffix')))]"
+            ],
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Redfield",
+                "Request_Source": "IbizaAIExtension",
+                "RetentionInDays": 90,
+                "WorkspaceResourceId": "[resourceId('microsoft.operationalinsights/workspaces', concat('python-appinsights-', variables('uniqueSuffix')))]",
+                "IngestionMode": "LogAnalytics",
+                "publicNetworkAccessForIngestion": "Enabled",
+                "publicNetworkAccessForQuery": "Enabled"
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2021-09-01",
+            "name": "[concat('storage', variables('uniqueSuffix'))]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_LRS",
+                "tier": "Standard"
+            },
+            "kind": "Storage",
+            "properties": {
+                "minimumTlsVersion": "TLS1_2",
+                "allowBlobPublicAccess": true,
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [],
+                    "ipRules": [],
+                    "defaultAction": "Allow"
+                },
+                "supportsHttpsTrafficOnly": true,
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "keyType": "Account",
+                            "enabled": true
+                        },
+                        "blob": {
+                            "keyType": "Account",
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts/blobServices",
+            "apiVersion": "2019-06-01",
+            "name": "[concat('storage', variables('uniqueSuffix'), '/default')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix')))]"
+            ],
+            "sku": {
+                "name": "Standard_RAGRS",
+                "tier": "Standard"
+            },
+            "properties": {
+                "cors": {
+                    "corsRules": []
+                },
+                "deleteRetentionPolicy": {
+                    "enabled": false
+                }
+            }
+        },
+          {
+            "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+            "apiVersion": "2019-06-01",
+            "name": "[concat('storage', variables('uniqueSuffix'), '/default/photos')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts/blobServices', concat('storage', variables('uniqueSuffix')), 'default')]",
+                "[resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix')))]"
+            ],
+            "properties": {
+                "publicAccess": "Container"
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-03-01",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'))]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Y1",
+                "tier": "Dynamic",
+                "size": "Y1",
+                "family": "Y",
+                "capacity": 0
+            },
+            "kind": "functionapp",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "apiVersion": "2021-03-01",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'), '-linux')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "P1v2",
+                "tier": "PremiumV2",
+                "size": "P1v2",
+                "family": "Pv2",
+                "capacity": 1
+            },
+            "kind": "linux",
+            "properties": {
+                "perSiteScaling": false,
+                "elasticScaleEnabled": false,
+                "maximumElasticWorkerCount": 1,
+                "isSpot": false,
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "targetWorkerCount": 0,
+                "targetWorkerSizeId": 0,
+                "zoneRedundant": false
+            }
+        },
+        {
+            "type": "Microsoft.DBforMySQL/servers",
+            "sku": {
+              "name":"B_Gen5_2",
+              "tier": "Basic",
+              "capacity": 2,
+              "size": 5120,
+              "family": "Gen5"
+            },
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'), '-mysql')]",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2017-12-01-preview",
+            "properties": {
+              "version": "8.0",
+              "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",                
+              "storageProfile": {
+                "storageMB": 5120,
+                "backupRetentionDays": 7,
+                "geoRedundantBackup": "Disabled"
+              },
+              "sslEnforcement": "Disabled"
+            }
+          },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-03-01",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'), '-app')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', concat('python-appinsights-', variables('uniqueSuffix'), '-linux'))]"
+            ],
+            "kind": "app,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat('python-appinsights-', variables('uniqueSuffix'), '-linux'))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "PYTHON|3.9",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": true,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 0,
+                    "minimumElasticInstanceCount": 0,
+                    "appSettings":[
+                      {
+                        "name":"SCM_DO_BUILD_DURING_DEPLOYMENT",
+                        "value":"1"
+                      },
+                        {
+                            "name":"APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value":"[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).InstrumentationKey]"
+                        },
+                        {
+                            "name":"APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value":"[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).ConnectionString]"
+                        },
+                        {
+                          "name":"AZURE_STORAGE_CONNECTION_STRING",
+                          "value":"[concat('DefaultEndpointsProtocol=https;AccountName=', concat('storage', variables('uniqueSuffix')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix'))),'2017-06-01').keys[0].value)]"
+                      },
+                        {
+                            "name": "DB_DATABASE",
+                            "value": "python",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_PASS",
+                            "value": "[parameters('administratorLoginPassword')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_PORT",
+                            "value": "1433",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_SERVER",
+                            "value": "[concat('python-appinsights-', variables('uniqueSuffix'), '.database.windows.net')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_USERNAME",
+                            "value": "[parameters('administratorLogin')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBHOST",
+                            "value": "[concat('python-appinsights-', variables('uniqueSuffix'), '-mysql.mysql.database.azure.com')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBNAME",
+                            "value": "python",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBPASS",
+                            "value": "[parameters('administratorLoginPassword')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBUSER",
+                            "value": "[concat(parameters('administratorLogin'),'@', 'python-appinsights-',  variables('uniqueSuffix'),'-mysql')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBHOST",
+                            "value": "[concat('python-appinsights-', variables('uniqueSuffix'), '-pg.postgres.database.azure.com')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBNAME",
+                            "value": "python",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBPASS",
+                            "value": "[parameters('administratorLoginPassword')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "PGDBUSER",
+                            "value": "[concat(parameters('administratorLogin'),'@', 'python-appinsights-',  variables('uniqueSuffix'),'-pg')]",
+                            "slotSetting": false
+                          },
+                        {
+                            "name": "STORAGE_ACCOUNT_NAME",
+                            "value": "[concat('storage',  variables('uniqueSuffix'))]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "STORAGE_CONTAINER_NAME",
+                            "value": "photos",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "STORAGE_URL",
+                            "value": "[concat('https://storage', variables('uniqueSuffix'), '.blob.core.windows.net','')]",
+                            "slotSetting": false
+                          }
+                          ,
+                          {
+                            "name": "WEBSITE_TIME_ZONE",
+                            "value": "UTC",
+                            "slotSetting": false
+                          }
+                    ]
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "C618431C209F934D47B2E74B6D3423EABD7C85B3CF4152183697641B5A9DDF46",
+                "containerSize": 0,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2021-03-01",
+            "name": "[concat('python-appinsights-', variables('uniqueSuffix'))]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', concat('python-appinsights-', variables('uniqueSuffix')))]"
+            ],
+            "tags": {
+                "hidden-link: /app-insights-resource-id": "/subscriptions/e433f371-e5e9-4238-abc2-7c38aa596a18/resourceGroups/cjg-python-appinsights/providers/Microsoft.Insights/components/cjg-python-appinsights20220512555"
+            },
+            "kind": "functionapp,linux",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "enabled": true,
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', concat('python-appinsights-', variables('uniqueSuffix')))]",
+                "reserved": true,
+                "isXenon": false,
+                "hyperV": false,
+                "siteConfig": {
+                    "numberOfWorkers": 1,
+                    "linuxFxVersion": "Python|3.9",
+                    "acrUseManagedIdentityCreds": false,
+                    "alwaysOn": false,
+                    "http20Enabled": false,
+                    "functionAppScaleLimit": 200,
+                    "minimumElasticInstanceCount": 0,
+                    "appSettings":[  
+                      {
+                            "name":"APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value":"[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).InstrumentationKey]"
+                        },
+                        {
+                            "name":"APPLICATIONINSIGHTS_CONNECTION_STRING",
+                            "value":"[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).ConnectionString]"
+                        },
+                        {
+                          "name": "AZURE_STORAGE_CONNECTION_STRING",
+                          "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', concat('storage', variables('uniqueSuffix')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix'))),'2017-06-01').keys[0].value)]"
+                      },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', concat('storage', variables('uniqueSuffix')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix'))),'2017-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "DB_DATABASE",
+                            "value": "python",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_PASS",
+                            "value": "[parameters('administratorLoginPassword')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_PORT",
+                            "value": "1433",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_SERVER",
+                            "value": "[concat('python-appinsights-', variables('uniqueSuffix'), '.database.windows.net')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DB_USERNAME",
+                            "value": "[parameters('administratorLogin')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBHOST",
+                            "value": "[concat('python-appinsights-', variables('uniqueSuffix'), '-mysql.mysql.database.azure.com')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBNAME",
+                            "value": "python",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBPASS",
+                            "value": "[parameters('administratorLoginPassword')]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "DBUSER",
+                            "value": "[concat(parameters('administratorLogin'),'@', 'python-appinsights-',  variables('uniqueSuffix'),'-mysql')]",
+                            "slotSetting": false
+                          },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                            "value": "python"
+                        },
+                        {
+                            "name": "STORAGE_ACCOUNT_NAME",
+                            "value": "[concat('storage',  variables('uniqueSuffix'))]",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "STORAGE_CONTAINER_NAME",
+                            "value": "photos",
+                            "slotSetting": false
+                          },
+                          {
+                            "name": "STORAGE_URL",
+                            "value": "[concat('https://storage', variables('uniqueSuffix'), '.blob.core.windows.net','')]",
+                            "slotSetting": false
+                          },
+                        {
+                            "name": "WEBSITE_RUN_FROM_PACKAGE",
+                            "value": "1"
+                        },
+                        {
+                            "name": "WEBSITE_TIME_ZONE",
+                            "value": "UTC"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', concat('storage', variables('uniqueSuffix')), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts', concat('storage', variables('uniqueSuffix'))),'2017-06-01').keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[toLower(concat('python-appinsights-', variables('uniqueSuffix')))]"
+                        }
+                    ]
+                },
+                "scmSiteAlsoStopped": false,
+                "clientAffinityEnabled": false,
+                "clientCertEnabled": false,
+                "clientCertMode": "Required",
+                "hostNamesDisabled": false,
+                "customDomainVerificationId": "C618431C209F934D47B2E74B6D3423EABD7C85B3CF4152183697641B5A9DDF46",
+                "containerSize": 1536,
+                "dailyMemoryTimeQuota": 0,
+                "httpsOnly": false,
+                "redundancyMode": "None",
+                "storageAccountRequired": false,
+                "keyVaultReferenceIdentity": "SystemAssigned"
+            }
+        }
+    ],
+    "outputs": {
+      "APPINSIGHTS_INSTRUMENTATIONKEY": {
+        "type": "string",
+        "value": "[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).InstrumentationKey]"
+      },
+      "APPLICATIONINSIGHTS_CONNECTION_STRING": {
+        "type": "string",
+        "value": "[reference(concat('microsoft.insights/components/', 'python-appinsights-', variables('uniqueSuffix'))).ConnectionString]"
+      },
+      "DB_DATABASE": {
+        "type": "string",
+        "value": "python"
+      },
+      "DB_USER": {
+        "type": "string",
+        "value": "[parameters('administratorLogin')]"
+      },
+      "DB_PASS": {
+        "type": "string",
+        "value": "[parameters('administratorLoginPassword')]"
+      },
+      "STORAGE_ACCOUNT_NAME": {
+        "type": "string",
+        "value": "[concat('storage',  variables('uniqueSuffix'))]"
+      },
+      "STORAGE_URL": {
+        "type": "string",
+        "value": "[concat('https://storage', variables('uniqueSuffix'), '.blob.core.windows.net','')]"
+      }
+    }
+}

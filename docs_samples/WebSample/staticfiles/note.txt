@@ -1,0 +1,1 @@
+Here for https://github.com/evansd/whitenoise/issues/215.
