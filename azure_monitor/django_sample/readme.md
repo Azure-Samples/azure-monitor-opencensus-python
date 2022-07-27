@@ -1,12 +1,23 @@
-# Configuring Django applications
+---
+title: 'Sample: Configuring Django applications with OpenCensus'
+description: Configuring Django applications with OpenCensus.
+author: givenscj
+ms.author: givenscj
+ms.devlang: python
+ms.topic: sample
+ms.date: 07/27/2022
+ms.custom: []
+---
 
-## Environment Setup
+# Sample: Configuring Django applications with OpenCensus
+
+This next example shows how to add the various OpenCensus settings to a Django application to send logging and metric data to Azure Monitor.  You will run the samples both locally and deploy the Django web application to the Azure App Service resource you deployed as part of the setup script.
+
+## 1 - Environment Setup
 
 Follow the steps in the [setup documentation](/azure_monitor/readme.md).
 
-## Sample Steps
-
-This next example shows how to add the various OpenCensus settings to a Django application to send logging and metric data to Azure Monitor.  You will run the samples both locally and deploy the Django web application to the Azure App Service resource you deployed as part of the setup script.
+## 2 - Configure Environment
 
 - Run the following commands to setup the environment:
 
@@ -56,6 +67,8 @@ OPENCENSUS = {
 }
 ```
 
+## 3 - Create Database
+
 - Create the database schema:
 
 ```python
@@ -70,6 +83,8 @@ py manage.py migrate
     python -m pip install --upgrade pip
     python -m pip install psutil
     ```
+
+## 4 - Test Application
 
 - Run the application and test the logging.
 
@@ -90,6 +105,8 @@ python manage.py runserver
   - Add a comment.
   - Choose a random picture.
   - Select **Save changes**.
+
+## 4 - Review Log Data
 
 - Switch to the Azure Portal.
 - Browse to the **python-applicationinsights-SUFFIX** Application Insights resource.
@@ -118,7 +135,7 @@ requests
 - Browse to the **python-appinsights-SUFFIX-app.azurewebsites.net** web site, the site should load successfully.
 - Add some more resturants and reviews, this will cause log data to be sent to Azure Monitor via OpenCensus.
 
-## Custom Metrics
+## 5 - Review Custom Metrics
 
 For the sample resturant application, you have two places where metrics are sent to Application Insights.
 

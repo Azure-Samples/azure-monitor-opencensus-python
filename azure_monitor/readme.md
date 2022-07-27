@@ -1,14 +1,30 @@
+---
+title: 'Getting Started with App Insights for Python via OpenCensus Samples'
+description: Getting Started with App Insights for Python via OpenCensus Samples.
+author: givenscj
+ms.author: givenscj
+ms.devlang: python
+ms.topic: sample
+ms.date: 07/27/2022
+ms.custom: []
+---
+
 # Getting Started with App Insights for Python via OpenCensus Samples
 
 Many of the samples in this folder support the https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python articles.  Reference these articles for more information on how OpenCensus works with Python and Application Insights.
 
-## Samples
+The following samples are available in this repo:
 
 - [Azure Functions](./azfunc_sample/reademe.md)
 - [Django](./django_sample/reademe.md)
 - [Flask](./flask_sample/reademe.md)
 - [Python (Simple)](./simple_sample/reademe.md)
 - [Python (Logger)](./python_logger_opencensus_azure/reademe.md)
+
+You can also find more samples in the following repos and documentation links however you may find that you have to setup more items manually that what is provided for you in the above samples:
+
+- [Quickstart: Deploy a Python (Django or Flask) web app to Azure App Service](https://docs.microsoft.com/azure/app-service/quickstart-python)
+- [Deploy a Python (Django or Flask) web app with PostgreSQL in Azure](https://docs.microsoft.com/azure/app-service/tutorial-python-postgresql-app)
 
 ## Setup
 

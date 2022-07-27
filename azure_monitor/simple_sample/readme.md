@@ -1,10 +1,23 @@
-# Simple Applications
+---
+title: 'Sample: Simple Python Applications with OpenCensus'
+description: Simple Python Applications with OpenCensus.
+author: givenscj
+ms.author: givenscj
+ms.devlang: python
+ms.topic: sample
+ms.date: 07/27/2022
+ms.custom: []
+---
 
-## Setup
+# Sample: Simple Python Applications with OpenCensus
+
+The following steps walkthrough setting up simple Python examples and executing them in a local environment.
+
+## 1 - Environment Setup
 
 Follow the steps in the [setup documentation](/azure_monitor/readme.md).
 
-## Create a simple Python App
+## 2 - Create a simple Python App
 
 - Create a new python file called `./simple_sample/app.py`.
 - Copy the following into it, be sure to replace your Application Insights connection string that you copied above:
@@ -72,7 +85,7 @@ customMetrics
 
     ![The custom metric for the carrots view is displayed.](../media/python_custommetrics-carrots-logs.png "Review the results of the metric data.")
 
-## Sending trace data
+## 3 - Sending trace data
 
 - Open the `./azure_monitor/simple_sample/trace.py` file, notice that the connection string is being pulled from an environment variable rather than being hard coded.
 - Press **F5** to run the file.
@@ -94,7 +107,7 @@ traces
 
 - For your trace item notice that some of the columns are empty, but others (such as `cloud_RoleName`, `cloud_RoleInstance` and `client_*`) are populated based on the client information from the SDK.
 
-## Capture exceptions and custom dimensions
+## 4 - Capture exceptions and custom dimensions
 
 - Switch back to your Visual Studio Code window.
 - Select the `./simple_sample/properties.py` file.
