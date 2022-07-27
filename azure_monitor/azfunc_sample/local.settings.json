@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "DBHOST": "python-appinsights-vpoex-mysql.mysql.database.azure.com",
+    "DBNAME": "python",
+    "DBUSER": "wsuser@python-appinsights-vpoex-mysql",
+    "DBPASS": "Microsoft123",
+    "AZURE_STORAGE_CONNECTION_STRING" : "BlobEndpoint=https://storagevpoex.blob.core.windows.net/;QueueEndpoint=https://storagevpoex.queue.core.windows.net/;TableEndpoint=https://storagevpoex.table.core.windows.net/;FileEndpoint=https://storagevpoex.file.core.windows.net/;AccountName=storagevpoex;AccountKey=c3jUwdD0XxOuaDQPCUQ51czJg58nxfnKvbOJcM9SMqsrDf6USIjFyjWvNnKti54d/6Xg6wXEtUnG+AStr99qxw==",
+    "AzureWebJobsStorage" : "UseDevelopmentStorage=true"
+  }
+}

@@ -71,5 +71,5 @@ Write-Host "Download Git repo." -ForegroundColor Green -Verbose
 git clone https://github.com/census-instrumentation/opencensus-python opencensus-python
 
 #copy the example files to the "simpleapps" folder
-copy ./opencensus-python/contrib/opencensus-ext-azure/examples/*/*.py ./docs_samples/SimpleApps
+copy ./opencensus-python/contrib/opencensus-ext-azure/examples/*/*.py ./azure_monitor/SimpleApps
 
