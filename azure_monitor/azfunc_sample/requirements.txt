@@ -5,8 +5,12 @@ opencensus-extension-azure-functions
 opencensus-ext-requests
 opencensus-ext-mysql
 azure-functions
+requests
 mysql
 mysql-connector-python
 pyodbc
 azure-storage-blob
 psutil
+cffi
+ffi
+pytest

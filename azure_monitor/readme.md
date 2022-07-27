@@ -24,7 +24,7 @@ To get started with the following samples, you need to:
   - [ms-azuretools.vscode-azurefunctions](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
 - Install [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools)
 - Create a [free Azure account](https://azure.microsoft.com/free/) if you don't already have an Azure subscription.
-- [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) (for local testing)
+- Install [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) (for local testing)
 
 ## Deploy the environment
 
@@ -43,12 +43,18 @@ git clone https://github.com/Azure-Samples/azure-monitor-opencensus-python pytho
 - Open a new Windows PowerShell window, run the following:
 
 ```powershell
-cd azure_monitor
+cd azure_monitor/artifacts
 
 setup.ps1
 ```
 
-- This will deploy the ARM template that contains all the necesary resources needed to run these samples.  It will also update the environment files with the specific connection string details.
+- This will deploy the ARM template that contains all the necesary resources needed to run these samples.  
+  - Reference the `template.json` file for the ARM template that is deployed.  It contains the following resources:
+
+    ![The resources that are deployed via ARM Template.](../media/../azure_monitor/media/python_azure_resources.png "Screenshot of all the deployed azure resources.")
+
+- It will also update the environment files for the sample files with the specific connection string details from the deployment to speed up your sample exploration.
+- Additionally it will download sample files from the [OpenCensus Python](https://github.com/census-instrumentation/opencensus-python) repo.
 
 ## Configure the environment (Azure)
 
@@ -64,7 +70,7 @@ setup.ps1
   - Select the **python-appinsights-SUFFIX-mysql** MySQL resource.
   - Under **Settings**, select **Connection security**.
   - Select the **Yes** toggle for the **Allow access to Azure Services**.
-  - Select **Add client IP**.
+  - Select **Add current client IP address**.
   - Select **Save**.
 
 - Setup local PostgresSQL connectivity
@@ -80,8 +86,8 @@ setup.ps1
 
 - Open Visual Studio code, select the **Extensions** tab.
 - Ensure the following extensions are installed:
-  - ms-python.python
-  - ms-azuretools.vscode-azurefunctions
+  - [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
+  - [ms-azuretools.vscode-azurefunctions](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
 
 ## Check your Python Version
 
@@ -100,6 +106,7 @@ python.exe --version
 
 ## Create a Python environment
 
+- Switch to the terminal window, ensure you are in the `azure_monitor` folder
 - Run the following command to create an environment where you can load all the dependencies:
 
 ```powershell
@@ -107,7 +114,7 @@ py -3 -m venv .venv
 .venv\scripts\activate
 ```
 
-- When prompted, select **yes**.
+- If prompted, select **yes**.
 - Ensure that you select the new environment in the interpertor selection otherwise the python commands you run later may not map to the proper python version.
 
 ## Install OpenCensus
@@ -143,9 +150,9 @@ python -m pip install pyodbc
 python -m pip install psutil
 ```
 
-## Configure middleware to track requests
+## Configure environment variables
 
+- Open the `.\azure_monitor\.env` file notice that as part of the setup the values have been copied into the environment file.  
 - Browse to the Azure Portal.
 - Select the Application Insights **python-appinsights-SUFFIX** resource.
-- On the **Overview** page, copy the connection string.
-- Open the `.\azure_monitor\.env` file notice that as part of the setup the values have been copied into the environment file.  Be sure to verify that the values match.
+- On the **Overview** page, copy the connection string. Be sure to verify that the values match in the `.env` file

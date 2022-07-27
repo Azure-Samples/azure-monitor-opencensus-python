@@ -6,7 +6,7 @@ Follow the steps in the [setup documentation](/azure_monitor/readme.md).
 
 ## Create a simple Python App
 
-- Create a new python file called `app.py`.
+- Create a new python file called `./simple_sample/app.py`.
 - Copy the following into it, be sure to replace your Application Insights connection string that you copied above:
 
 ```python
@@ -45,7 +45,7 @@ traces
 
   ![The query is displayed with one result from the above program.](./media/python_simple_app_trace.png "Review the results of the query.")
 
-- Open the `./SimpleApps/metric.py` file.
+- Open the `./azure_monitor/simple_sample/metric.py` file.
 - Press **F5** to run the file, select **Python file** in the debug configuration window.
 - Switch to the Azure Portal.
 - Browse to your lab resource group.
@@ -55,7 +55,7 @@ traces
 - For the **Metric**, select **carrots_view**.
 - You should see some data displayed:
 
-    ![The custom metric for the carrots view is displayed.](./media/python_custommetrics-carrots.png "Review the results of the metric data.")
+    ![The custom metric for the carrots view is displayed.](../media/python_custommetrics-carrots.png "Review the results of the metric data.")
 
 - Stop the application.
 
@@ -70,11 +70,11 @@ customMetrics
 
 - You should see the metric value is recorded every 15 seconds:
 
-    ![The custom metric for the carrots view is displayed.](./media/python_custommetrics-carrots-logs.png "Review the results of the metric data.")
+    ![The custom metric for the carrots view is displayed.](../media/python_custommetrics-carrots-logs.png "Review the results of the metric data.")
 
 ## Sending trace data
 
-- Open the `./azure_monitor/SimpleApps/trace.py` file, notice that the connection string is being pulled from an environment variable rather than being hard coded.
+- Open the `./azure_monitor/simple_sample/trace.py` file, notice that the connection string is being pulled from an environment variable rather than being hard coded.
 - Press **F5** to run the file.
 - Switch to the Azure Portal.
 - Browse to your lab resource group.
@@ -90,14 +90,14 @@ traces
 
 - You should see your trace in the **message** column:
 
-  ![The query is displayed with one result from the above program.](./media/python_simple_trace_trace.png "Review the results of the query.")
+  ![The query is displayed with one result from the above program.](../media/python_simple_trace_trace.png "Review the results of the query.")
 
 - For your trace item notice that some of the columns are empty, but others (such as `cloud_RoleName`, `cloud_RoleInstance` and `client_*`) are populated based on the client information from the SDK.
 
 ## Capture exceptions and custom dimensions
 
 - Switch back to your Visual Studio Code window.
-- Select the `./SimpleApps/properties.py` file.
+- Select the `./simple_sample/properties.py` file.
 - Press **F5** to run the file, select **Python file** in the debug configuration window.
 - Switch to the Azure Portal.
 - Browse to your lab resource group.
@@ -113,4 +113,4 @@ exceptions
 
 - Expand your exception item, notice the `details` column has the exception details you would expect, but also expand the `customDimensions` column to review the custom data that was sent to the application insights table.
 
-  ![The query is displayed with one result from the above program.](./media/python_simple_exception_custom.png "Review the results of the query.")
+  ![The query is displayed with one result from the above program.](../media/python_simple_exception_custom.png "Review the results of the query.")

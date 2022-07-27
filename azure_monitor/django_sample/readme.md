@@ -12,7 +12,8 @@ This next example shows how to add the various OpenCensus settings to a Django a
 
 ```powershell
 cd $home
-cd .\azure_monitor\WebSample
+
+cd .\azure_monitor\django_sample
 ```
 
 ```python
@@ -37,7 +38,7 @@ python -m pip install -r requirements.txt
   - Select **Save**.
 
 - Setup the Application insights middleware
-  - Open the `./azure_monitor/WebSample/azureproject/settings.py` file.
+  - Open the `./azure_monitor/django_sample/azureproject/settings.py` file.
   - Ensure the following line is present in the `MIDDLEWARE` section:
 
 ```python
@@ -62,7 +63,7 @@ py manage.py migrate
 ```
 
 - If you get an error about `psutil._psutil_windows` do the following:
-  - Open the `.venv\Lib\site-packages` folder and delete the `psutil` and `psutil-5.9.1.dist-info` folders.
+  - Open the `\azure-monitor\.venv\Lib\site-packages` folder and delete the `psutil` and `psutil-5.9.1.dist-info` folders.
   - Then run the following:
 
     ```Python
@@ -102,7 +103,7 @@ requests
 
 - Select **Run**, you should see the following:
 
-  ![The query is displayed with the results from web app request data.](./media/python_webapp_requests.png "Review the results of the query.")
+  ![The query is displayed with the results from web app request data.](../media/python_webapp_requests.png "Review the results of the query.")
 
 - Select the **Azure** icon in the toolbar of Visual Studio code.
 - If prompted, select **Sign in to Azure..** and follow the prompts.
@@ -111,7 +112,7 @@ requests
 - Expand **App Services**.
 - Locate the target web app to deploy too, this will be **python-appinsights-SUFFIX-app**.
   - If needed, select **Install extension to enable additional features**, then select **Install** to instal the Azure App Service extension.
-- In Visual Studio Code, right-click the **WebSample** folder, select **Deploy to web app**.
+- In Visual Studio Code, right-click the **django_sample** folder, select **Deploy to web app**.
 - Selec the **python-appinsights-SUFFIX-app** web app.
 - If prompted, select **Deploy**.
 - Browse to the **python-appinsights-SUFFIX-app.azurewebsites.net** web site, the site should load successfully.
@@ -130,4 +131,4 @@ For the sample resturant application, you have two places where metrics are sent
 - For the **Metric**, select **reviews_view**.
 - You should see some data displayed for the reviews made from the web site:
 
-    ![The custom metric for the reviews view is displayed.](./media/python_custommetrics-web-reviews.png "Review the results of the metric data.")
+    ![The custom metric for the reviews view is displayed.](../media/python_custommetrics-web-reviews.png "Review the results of the metric data.")
