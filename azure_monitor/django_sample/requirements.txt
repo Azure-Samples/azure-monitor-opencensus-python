@@ -6,7 +6,7 @@ django-sslserver
 azure-storage-blob
 azure-identity
 opencensus
-opencensus.ext.azure
-opencensus.ext.django
+opencensus-ext-azure
+opencensus-ext-django
 opencensus-ext-postgresql
 psutil
