@@ -15,7 +15,7 @@ This is an example of how to configure Azure Function applications to send depen
 
 ## 1 - Environment Setup
 
-Follow the steps in the [setup documentation](/azure_monitor/readme.md).
+Follow the steps in the [documentation](/azure_monitor/readme.md) to setup your environment.
 
 ## 2 - Utilize Function Apps with OpenCensus
 
