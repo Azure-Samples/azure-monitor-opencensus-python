@@ -9,7 +9,7 @@ ms.date: 07/27/2022
 ms.custom: []
 ---
 
-# Sample: Configuring Function Apps with Python and OpenCensus
+# Sample: Configuring Function Apps with OpenCensus SDK
 
 This is an example of how to add the various settings Python-based Azure Function applications to send dependencies calls to Azure Monitor.  You will run the samples both locally and deploy the Azure Functions to an Azure App Service resource you deployed as part of the setup script.
 
