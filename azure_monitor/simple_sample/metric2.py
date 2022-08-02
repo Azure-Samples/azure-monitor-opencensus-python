@@ -8,7 +8,7 @@ from opencensus.stats import stats as stats_module
 from opencensus.stats import view as view_module
 from opencensus.tags import tag_map as tag_map_module
 
-appKey = os.getenv('APP_INSIGHTS_KEY')
+appKey = os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING')
 
 stats = stats_module.stats
 view_manager = stats.view_manager

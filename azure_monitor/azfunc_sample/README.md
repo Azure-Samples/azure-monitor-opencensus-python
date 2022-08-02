@@ -58,7 +58,7 @@ az login
 func azure functionapp publish python-appinsights-SUFFIX   
 ```
 
-- You should see the two function applications deployed successfully:
+- You should see the function applications deployed successfully:
 
   ![The results of the function app publish command is displayed.](../media/python_functionapp_deploy.png "Review the results and ensure the function apps deployed succesfully.")
 
@@ -80,3 +80,5 @@ dependencies
 ```
 
 - You should see the dependencies displayed for the calls to MySQL and Azure storage displayed.
+
+![The results of the query is displayed.](../media/python_azure_dependencies.png "Review the query output for the dependencies.")

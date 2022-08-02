@@ -13,7 +13,7 @@ stats = stats_module.stats
 view_manager = stats.view_manager
 stats_recorder = stats.stats_recorder
 
-appKey = os.getenv('APP_INSIGHTS_KEY')
+appKey = os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING')
 
 REST_MEASURE = measure_module.MeasureInt("resturants",
                                             "number of resturants",

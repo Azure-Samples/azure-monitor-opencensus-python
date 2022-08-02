@@ -8,7 +8,7 @@ from opencensus.ext.azure.log_exporter import AzureLogHandler
 
 logger = logging.getLogger(__name__)
 
-appKey = os.getenv('APP_INSIGHTS_KEY')
+appKey = os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING')
 
 logger.addHandler(AzureLogHandler(
     connection_string=appKey)
