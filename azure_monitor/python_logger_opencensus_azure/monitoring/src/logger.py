@@ -159,7 +159,7 @@ class AppLogger:
 
     def _get_callback(self, component_name):
         """Adding cloud role name. This is required to give the name of component in application map.
-        https://docs.microsoft.com/en-us/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
+        https://docs.microsoft.com/azure/azure-monitor/app/app-map?tabs=net#understanding-cloud-role-name-within-the-context-of-the-application-map
 
         Args:
             component_name ([str]): [The name of the component or applicaiton]

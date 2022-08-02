@@ -11,15 +11,15 @@ ms.custom: []
 
 # Getting Started with App Insights for Python via OpenCensus Samples
 
-Many of the samples in this folder support the https://docs.microsoft.com/en-us/azure/azure-monitor/app/opencensus-python articles.  Reference these articles for more information on how OpenCensus works with Python and Application Insights.
+Many of the samples in this folder support the https://docs.microsoft.com/azure/azure-monitor/app/opencensus-python articles.  Reference these articles for more information on how OpenCensus works with Python and Application Insights.
 
 The following samples are available in this repo:
 
-- [Azure Functions](./azfunc_sample/reademe.md)
-- [Django](./django_sample/reademe.md)
-- [Flask](./flask_sample/reademe.md)
-- [Python (Simple)](./simple_sample/reademe.md)
-- [Python (Logger)](./python_logger_opencensus_azure/reademe.md)
+- [Azure Functions](./azfunc_sample/README.md)
+- [Django](./django_sample/README.md)
+- [Flask](./flask_sample/README.md)
+- [Python (Simple)](./simple_sample/README.md)
+- [Python (Logger)](./python_logger_opencensus_azure/README.md)
 
 You can also find more samples in the following repos and documentation links however you may find that you have to setup more items manually that what is provided for you in the above samples:
 
@@ -38,9 +38,9 @@ To get started with the following samples, you need to:
 - Install the latest version of Visual Studio Code with the following extensions.
   - [ms-python.python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
   - [ms-azuretools.vscode-azurefunctions](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-azurefunctions)
-- Install [Azure Functions Core Tools](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools)
+- Install [Azure Functions Core Tools](https://docs.microsoft.com/azure/azure-functions/functions-run-local?tabs=v4%2Cwindows%2Ccsharp%2Cportal%2Cbash#install-the-azure-functions-core-tools)
 - Create a [free Azure account](https://azure.microsoft.com/free/) if you don't already have an Azure subscription.
-- Install [Azure Storage Emulator](https://docs.microsoft.com/en-us/azure/storage/common/storage-use-emulator) (for local testing)
+- Install [Azure Storage Emulator](https://docs.microsoft.com/azure/storage/common/storage-use-emulator) (for local Function App testing)
 
 ## Deploy the environment
 

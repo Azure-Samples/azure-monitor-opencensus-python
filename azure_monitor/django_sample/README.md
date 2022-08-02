@@ -15,7 +15,7 @@ This next example shows how to add the various OpenCensus settings to a Django a
 
 ## 1 - Environment Setup
 
-Follow the steps in the [setup documentation](/azure_monitor/readme.md).
+Follow the steps in the [setup documentation](/azure_monitor/README.md).
 
 ## 2 - Configure Environment
 
@@ -27,12 +27,9 @@ cd $home
 cd .\azure_monitor\django_sample
 ```
 
-```python
-python -m pip install django
-python -m pip install python-dotenv
-python -m pip install opencensus-ext-django
-python -m pip install opencensus-ext-postgresql
+- Review the `requirements.txt` file, you will see all the required packages for the sample included.  Exercute the following command to install all the packages in the requirements.txt file:
 
+```python
 python -m pip install -r requirements.txt
 ```
 

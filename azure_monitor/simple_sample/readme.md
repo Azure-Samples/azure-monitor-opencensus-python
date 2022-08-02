@@ -15,7 +15,7 @@ The following steps walkthrough setting up simple Python examples and executing 
 
 ## 1 - Environment Setup
 
-Follow the steps in the [setup documentation](/azure_monitor/readme.md).
+Follow the steps in the [setup documentation](/azure_monitor/README.md).
 
 ## 2 - Create a simple Python App
 

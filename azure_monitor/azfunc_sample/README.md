@@ -11,11 +11,11 @@ ms.custom: []
 
 # Sample: Configuring Function Apps with OpenCensus SDK
 
-This is an example of how to configure Azure Function applications to send dependencies calls to Azure Monitor.  You will run the samples both locally and deploy the functions to an Azure Functions resource you deployed as part of the setup script.
+This is an example of how to configure Azure Function applications to send dependencies calls to Azure Monitor.  You will run the samples both locally and deploy the functions to an Azure Functions resource you deployed as part of the setup script.  These Function Apps sample will utilize OpenCensus depencencies to record calls to external services such as internal method calls, MySQL and Azure Storage.
 
 ## 1 - Environment Setup
 
-Follow the steps in the [documentation](/azure_monitor/readme.md) to setup your environment.
+Follow the steps in the [documentation](/azure_monitor/README.md) to setup your environment.
 
 ## 2 - Utilize Function Apps with OpenCensus
 
@@ -31,6 +31,8 @@ python -m pip install -r requirements.txt
 func start
 ```
 
+> NOTE: The `func` command is installed as part of the Azure Function Tools as part of the environment setup.
+
 - If you get an error about `psutil._psutil_windows` do the following:
   - Open the `.venv\Lib\site-packages` folder and delete the `psutil` and `psutil-5.9.1.dist-info` folders.
   - Then run the following:
@@ -40,7 +42,9 @@ func start
     python -m pip install psutil
     ```
 
-- Browse to the HTTP function endpoint `http://localhost:7071/api/MyHttpFunction`.
+- Browse to the HTTP function endpoint `http://localhost:7071/api/MyHttpFunction`, you can review the code in the `\azfunc_sample\MyHttpFunction\__init__.py`, you will see that it performs the following:
+- Connects to MySQL and performs a query
+- Creates a file an uploads it to Azure Storage
 
 ## 3 - Deploy to Azure
 
@@ -62,7 +66,7 @@ func azure functionapp publish python-appinsights-SUFFIX
 - Navigate to the **python-appinsights-SUFFIX** function app.
 - Under **Functions**, select **Functions**, you should see the two python function apps deployed.
 
-> **NOTE** Azure Function runtimes support various Python versions depending on the version selected.  See [Languages by runtime version](https://docs.microsoft.com/en-us/azure/azure-functions/supported-languages#languages-by-runtime-version).
+> **NOTE** Azure Function runtimes support various Python versions depending on the version selected.  See [Languages by runtime version](https://docs.microsoft.com/azure/azure-functions/supported-languages#languages-by-runtime-version).
 
 - Review the function app code.  Notice the usage of the a storage account and a call to the database.
 
