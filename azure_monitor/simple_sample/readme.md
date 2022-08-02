@@ -56,7 +56,7 @@ traces
 
 - You should see the following:
 
-  ![The query is displayed with one result from the above program.](./media/python_simple_app_trace.png "Review the results of the query.")
+  ![The query is displayed with one result from the above program.](../media/python_simple_app_trace.png "Review the results of the query.")
 
 - Open the `./azure_monitor/simple_sample/metric.py` file.
 - Press **F5** to run the file, select **Python file** in the debug configuration window.

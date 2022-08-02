@@ -15,11 +15,11 @@ Many of the samples in this folder support the https://docs.microsoft.com/azure/
 
 The following samples are available in this repo:
 
-- [Azure Functions](./azfunc_sample/README.md)
-- [Django](./django_sample/README.md)
-- [Flask](./flask_sample/README.md)
-- [Python (Simple)](./simple_sample/README.md)
-- [Python (Logger)](./python_logger_opencensus_azure/README.md)
+- [Azure Functions - Utilizes dependency tracking via MySQL and Azure Storage](./azfunc_sample/README.md)
+- [Django - Utilizes custom metrics based on web application events in an App Service](./django_sample/README.md)
+- [Flask - Utilizes OpenCensus Request and SqlAlchemy dependency tracking](./flask_sample/README.md)
+- [Python (Simple) - Simple python applications that utilize OpenCensus tracing](./simple_sample/README.md)
+- [Python (Logger) - Python applications that utilize OpenCensus tracing and dependencies](./python_logger_opencensus_azure/README.md)
 
 You can also find more samples in the following repos and documentation links however you may find that you have to setup more items manually that what is provided for you in the above samples:
 
