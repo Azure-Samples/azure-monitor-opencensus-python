@@ -1,11 +1,16 @@
-# DO NOT include azure-functions-worker in this file
-# The Python Worker is managed by Azure Functions platform
-# Manually managing azure-functions-worker may cause unexpected issues
-
-azure-functions==1.7.2
-requests==2.22.0
-opencensus-extension-azure-functions==1.0.0
-opencensus-ext-requests==0.7.5
-opencensus-ext-azure==1.0.8
-opencensus-ext-logging==0.1.0
-pytest==6.2.4
+opencensus
+opencensus-ext-logging
+opencensus-ext-azure
+opencensus-extension-azure-functions
+opencensus-ext-requests
+opencensus-ext-mysql
+azure-functions
+requests
+mysql
+mysql-connector-python
+pyodbc
+azure-storage-blob
+psutil
+cffi
+ffi
+pytest

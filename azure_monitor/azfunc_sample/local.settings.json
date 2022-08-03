@@ -1,0 +1,15 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "DBHOST": "python-appinsights-{SUFFIX}-mysql.mysql.database.azure.com",
+    "DBNAME": "python",
+    "DBUSER": "{DBUSER}@python-appinsights-{SUFFIX}-mysql",
+    "DBPASS": "{DBPASSWORD}",
+    "AZURE_STORAGE_CONNECTION_STRING" : "{STORAGE_CONNECTION_STRING}",
+    "APPLICATIONINSIGHTS_CONNECTION_STRING" : "{INSIGHTS_CONNECTION_STRING}",
+    "AzureWebJobsStorage" : "UseDevelopmentStorage=true",
+    "WEBSITE_SITE_NAME" : "instrumentation",
+    "EXTERNAL_DEPENDENCY_URL" : "https://www.bing.com"
+  }
+}

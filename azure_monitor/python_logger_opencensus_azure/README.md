@@ -73,7 +73,7 @@ Assuming, if we need to add code for above scenarios, then this will get repeate
 ## Prerequisites for using AppLogger
 
 * An Azure subscription
-* Create an [Application Insights resource](https://docs.microsoft.com/en-us/azure/azure-monitor/app/create-new-resource) and store the application insights instrumentation key
+* Create an [Application Insights resource](https://docs.microsoft.com/azure/azure-monitor/app/create-new-resource) and store the application insights instrumentation key
  which is used in python logger class.
 * Using one of the supported [Python versions](https://github.com/census-instrumentation/opencensus-python/blob/master/setup.py#L25)
 
