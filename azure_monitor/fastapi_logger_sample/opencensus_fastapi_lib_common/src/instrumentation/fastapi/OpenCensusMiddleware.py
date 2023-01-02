@@ -34,9 +34,7 @@ def _add_pre_request_attributes(span: Union[Span, BlankSpan], request: Request):
     span.add_attribute(HTTP_PATH, request.url.path)
     span.add_attribute(HTTP_URL, str(request.url))
     span.add_attribute(HTTP_ROUTE, request.url.path)
-    # execution_context.set_opencensus_attr(
-    #     "excludelist_hostnames", self.excludelist_hostnames
-    # )
+
 
 
 def _post_request(span: Union[Span, BlankSpan], response: Response):

@@ -1,34 +1,29 @@
-__path__ = __import__("pkgutil").extend_path(__path__, __name__)
-
 import functools
 import os
 import re
 
 from opencensus.trace import span as span_module, Span
+from opencensus.trace.base_exporter import Exporter
 from opencensus.trace.print_exporter import PrintExporter
 from opencensus.trace.propagation.trace_context_http_header_format import (
     TraceContextPropagator,
 )
-from opencensus.trace.samplers import AlwaysOnSampler
+from opencensus.trace.samplers import AlwaysOnSampler, Sampler
 from opencensus.trace.span_context import SpanContext
 from opencensus.trace.trace_options import TraceOptions
 from opencensus.trace.tracer import Tracer
 
-from instrumentation import BaseIntrumentator, handle_exception
-
+from instrumentation import BaseIntrumentator, handle_exception, AzureLoggerConfig
 
 TRACE_ID_PARAM = "traceparent"
 SPAN_ID_PARAM = "spanId"
 _TRACEPARENT_HEADER_FORMAT = (
-    "^[ \t]*([0-9a-f]{2})-([0-9a-f]{32})-([0-9a-f]{16})-([0-9a-f]{2})" + "(-.*)?[ \t]*$"
+        "^[ \t]*([0-9a-f]{2})-([0-9a-f]{32})-([0-9a-f]{16})-([0-9a-f]{2})" + "(-.*)?[ \t]*$"
 )
 _TRACE_CONTEXT_HEADER_RE = re.compile(_TRACEPARENT_HEADER_FORMAT)
 
-is_instrumented = False
-sampler = None
-exporter = None
-propagator = None
 instrumentator: BaseIntrumentator = None
+
 
 def add_additional_attributes(span, *args, **kwargs):
     span.span_kind = span_module.SpanKind.SERVER
@@ -96,34 +91,34 @@ class ArgumentPropagator(TraceContextPropagator):
             return SpanContext()
 
 
-class BatchInstrumentator(BaseIntrumentator):
+class TaskInstrumentator(BaseIntrumentator):
     def __init__(
-        self,
-        component_name=None,
-        sampler=AlwaysOnSampler(),
-        exporter=PrintExporter,
-        propogator=ArgumentPropagator(),
+            self,
+            component_name=None
     ):
-
-        super().__init__(
-            component_name,
-            sampler,
-            exporter,
-            propogator,
-        )
+        super().__init__(component_name)
 
     def create_span_context(self, args, kwargs):
         return ArgumentPropagator().from_arugments()
 
+    def with_tracing(self, sampler: Sampler = None, exporter: Exporter = None, propagator=None,
+                     azure_log_config: AzureLoggerConfig = None, app_insight_connection_string: str = None,
+                     trace_export_duration=1.0):
+        # if connection string is set then ignore the exporter configured
+        self.sampler = sampler or AlwaysOnSampler()
+        if app_insight_connection_string is None and exporter is None:
+            from opencensus.trace import print_exporter
+            self.exporter = exporter or print_exporter.PrintExporter()
+        self.propagator = propagator or ArgumentPropagator()
+        return super().with_tracing(
+            self.sampler,
+            self.exporter,
+            self.propagator,
+            azure_log_config,
+            app_insight_connection_string,
+            trace_export_duration)
+
     def instrument(self):
-        global is_instrumented
-        is_instrumented = True
-        global sampler
-        global exporter
-        global propagator
-        sampler = self.sampler
-        exporter = self.exporter
-        propagator = self.propagator
         global instrumentator
         instrumentator = self
         super().add_azure_log_handler()
