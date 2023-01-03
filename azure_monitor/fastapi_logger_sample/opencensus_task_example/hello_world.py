@@ -1,6 +1,5 @@
 import logging
 
-from instrumentation import AzureLoggerConfig
 from instrumentation.task import TaskInstrumentator, with_tracing
 
 logging.basicConfig(
@@ -13,9 +12,12 @@ logging.basicConfig(
 
 log=logging.getLogger(__name__)
 
-TaskInstrumentator(component_name="batch-task").with_tracing(app_insight_connection_string="InstrumentationKey=535b709e-f3c8-46ca-b0f9-3bdb3c80dd7f;IngestionEndpoint=https"
-                                                                                           "://centralindia-0.in.applicationinsights.azure.com/;LiveEndpoint=https"
-                                                                                           "://centralindia.livediagnostics.monitor.azure.com/", azure_log_config=AzureLoggerConfig(level="INFO")).instrument()
+TaskInstrumentator(component_name="batch-task").with_tracing().instrument()
+
+
+# TaskInstrumentator(component_name="batch-task").with_tracing(
+#     app_insight_connection_string="app-insight-connection-string", azure_log_config=AzureLoggerConfig(
+#         level="INFO")).instrument()
 
 @with_tracing
 def process_and_trace():

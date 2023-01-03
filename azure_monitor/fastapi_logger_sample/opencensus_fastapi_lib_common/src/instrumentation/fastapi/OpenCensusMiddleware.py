@@ -1,11 +1,9 @@
 import logging
-from typing import Union
 
 from opencensus.trace import (
     attributes_helper,
 )
 from opencensus.trace import span as span_module
-from opencensus.trace.blank_span import BlankSpan
 from opencensus.trace.span import Span
 from opencensus.trace.tracer import Tracer
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
@@ -13,7 +11,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 from starlette.types import ASGIApp
 
-from instrumentation import get_tracer, handle_exception
+from instrumentation import create_tracer, add_exception_details_to_span
 
 HTTP_HOST = attributes_helper.COMMON_ATTRIBUTES["HTTP_HOST"]
 HTTP_METHOD = attributes_helper.COMMON_ATTRIBUTES["HTTP_METHOD"]
@@ -23,16 +21,6 @@ HTTP_URL = attributes_helper.COMMON_ATTRIBUTES["HTTP_URL"]
 HTTP_STATUS_CODE = attributes_helper.COMMON_ATTRIBUTES["HTTP_STATUS_CODE"]
 
 framework_logger = None
-
-
-def _add_pre_request_attributes(span: Union[Span, BlankSpan], request: Request):
-    span.span_kind = span_module.SpanKind.SERVER
-    span.name = "[{}]{}".format(request.method, request.url)
-    span.add_attribute(HTTP_HOST, request.url.hostname)
-    span.add_attribute(HTTP_METHOD, request.method)
-    span.add_attribute(HTTP_PATH, request.url.path)
-    span.add_attribute(HTTP_URL, str(request.url))
-    span.add_attribute(HTTP_ROUTE, request.url.path)
 
 async def finish_tracer(response, span, tracer):
     span.add_attribute(HTTP_STATUS_CODE, response.status_code)
@@ -77,40 +65,36 @@ class OpenCensusMiddleware(BaseHTTPMiddleware):
 
     def _init_tracer(self, request: Request) -> Tracer:
         span_context = self.propagator.from_headers(request.headers)
-        return get_tracer(span_context, self.sampler, self.exporter, self.propagator)
+        return create_tracer(span_context, self.sampler, self.exporter, self.propagator)
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
-
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         if self.excluded_urls and self.excluded_urls.url_disabled(str(request.url)):
             return await call_next(request)
         self.instrumentator.add_azure_log_handler()  # Add handler to loggers
-
         try:
             tracer = self._init_tracer(request)
             span: Span = tracer.start_span(self.component_name)
+            span.span_kind = span_module.SpanKind.SERVER
+            span.name = "[{}]{}".format(request.method, request.url)
+            span.add_attribute(HTTP_HOST, request.url.hostname)
+            span.add_attribute(HTTP_METHOD, request.method)
+            span.add_attribute(HTTP_PATH, request.url.path)
+            span.add_attribute(HTTP_URL, str(request.url))
+            span.add_attribute(HTTP_ROUTE, request.url.path)
         except Exception:  # pragma: NO COVER
             framework_logger.error("Failed to trace request", exc_info=True)
             return await call_next(request)
-        try:
-            _add_pre_request_attributes(span, request)
-        except Exception:  # pragma: NO COVER
-            framework_logger.error("Failed to trace request", exc_info=True)
-
         try:
             response = await call_next(request)
         except Exception as err:  # pragma: NO COVER
             try:
-                handle_exception(span, err)
+                add_exception_details_to_span(span, err)
                 await finish_tracer(response, span, tracer)
             except Exception:  # pragma: NO COVER
                 framework_logger.error("Failed to trace response", exc_info=True)
             raise err
-
         try:
             await finish_tracer(response, span, tracer)
         except Exception:  # pragma: NO COVER
             framework_logger.error("Failed to trace response", exc_info=True)
-
         return response

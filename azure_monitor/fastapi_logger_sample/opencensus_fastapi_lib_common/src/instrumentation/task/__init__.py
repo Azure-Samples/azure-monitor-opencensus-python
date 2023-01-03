@@ -13,7 +13,7 @@ from opencensus.trace.span_context import SpanContext
 from opencensus.trace.trace_options import TraceOptions
 from opencensus.trace.tracer import Tracer
 
-from instrumentation import BaseIntrumentator, handle_exception, AzureLoggerConfig
+from instrumentation import BaseIntrumentator, add_exception_details_to_span, AzureLoggerConfig
 
 TRACE_ID_PARAM = "traceparent"
 SPAN_ID_PARAM = "spanId"
@@ -42,7 +42,7 @@ def with_tracing(func):
             instrumentator.add_azure_log_handler()
             return_value = func(*args, **kwargs)
         except Exception as exp:
-            handle_exception(span, exp)
+            add_exception_details_to_span(span, exp)
             trace.end_span()
             trace.finish()
             raise exp
@@ -53,7 +53,13 @@ def with_tracing(func):
     return wrapper
 
 
-class ArgumentPropagator(TraceContextPropagator):
+class EnvironmentTracetPropagator(TraceContextPropagator):
+    """
+    Custom propagator that helps to propagate trace_id reading it from environment variable. In case on non-web
+    application there isn't a request or request header available. In such cases there are options to popagate traceid
+    either though environment variable or though program arguments. Passing though program argument would pollute the bussiness
+    parameters
+    """
     def __init__(self) -> None:
         super().__init__()
 
@@ -92,14 +98,11 @@ class ArgumentPropagator(TraceContextPropagator):
 
 
 class TaskInstrumentator(BaseIntrumentator):
-    def __init__(
-            self,
-            component_name=None
-    ):
+    def __init__(self,component_name=None):
         super().__init__(component_name)
 
     def create_span_context(self, args, kwargs):
-        return ArgumentPropagator().from_arugments()
+        return EnvironmentTracetPropagator().from_arugments()
 
     def with_tracing(self, sampler: Sampler = None, exporter: Exporter = None, propagator=None,
                      azure_log_config: AzureLoggerConfig = None, app_insight_connection_string: str = None,
@@ -109,7 +112,7 @@ class TaskInstrumentator(BaseIntrumentator):
         if app_insight_connection_string is None and exporter is None:
             from opencensus.trace import print_exporter
             self.exporter = exporter or print_exporter.PrintExporter()
-        self.propagator = propagator or ArgumentPropagator()
+        self.propagator = propagator or EnvironmentTracetPropagator()
         return super().with_tracing(
             self.sampler,
             self.exporter,

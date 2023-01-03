@@ -21,17 +21,15 @@ app = FastAPI()
 #     .instrument()
 
 #Without exporter. Defaults to PrintExporter
-# FastapiInstrumentator(app, component_name) \
-#     .with_excluded_url("health").with_tracing() \
-#     .instrument()
-
 FastapiInstrumentator(app, component_name) \
-    .with_excluded_url("health").with_tracing(
-    app_insight_connection_string="InstrumentationKey=535b709e-f3c8-46ca-b0f9-3bdb3c80dd7f;IngestionEndpoint=https"
-                                  "://centralindia-0.in.applicationinsights.azure.com/;LiveEndpoint=https"
-                                  "://centralindia.livediagnostics.monitor.azure.com/",
-    azure_log_config=AzureLoggerConfig(level="INFO")) \
+    .with_excluded_url("health").with_tracing() \
     .instrument()
+
+# FastapiInstrumentator(app, component_name) \
+#     .with_excluded_url("health").with_tracing(
+#     app_insight_connection_string="instrumentation-key",
+#     azure_log_config=AzureLoggerConfig(level="INFO")) \
+#     .instrument()
 
 
 router = APIRouter()
@@ -45,7 +43,6 @@ async def health():
 @router.get("/")
 async def main():
     logger.info("Received request")
-    logger.warning("Warning level")
     return "Welcome"
 
 
