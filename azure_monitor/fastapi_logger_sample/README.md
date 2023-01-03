@@ -87,6 +87,34 @@ Example as below
 All parameters and method definations are same as that of FastApi application with a minor difference that the 
 propagator in this case will refer to trace propagation from environment variable instead of header
 
+## Notes on passing traceId externally
+
+If one wants to pass trace_id externally while invoking the rest call or while using the task based approach below two options are available
+
+### TraceId propagation in case of FastAPI (Web)
+For FastAPI usecase the library uses Header based propagation. To pass traceid in header one need set below head
+traceparent=<version-could be 00 in mostcases>-<32letters hex traceid>-<16letters hex spanid>-<tracestate number>
+eg: traceparent=00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01
+it is very important to maintain the format. Please note that all 0’s is not a valid value. In case of any invalid value a new traceid will be 
+generated and the relationship with earlier traceid is lost
+
+### TraceId propagation in case of Batches/non-web applications
+For non FastAPI based - typically batches or application that have only one entry point the library uses environment variable based 
+propagation. Because the non-web applications do not have access to things like request headers there were couple of options to pass 
+traceparent 
+1) To pass as program argument and 
+2) To pass as environment variable.
+
+We choose option 2 because we do not want to 
+pollute the semantics of program argument and they don’t allow key-value based passing without hack.
+
+The traceid format has to be same as explained above.
+
+Example execution could be /bin/bash -c "export traceparent=00-4bf92f3577b34da6a3ce929d0e0e4736-
+00f067aa0ba902b7-01" python main.py"
+
+One of the use case where this approach is useful in case of batch executions from ADF. Once can use run id of ADF, remove all hyphens from run id and populate it as trace_id in traceparent. This will enable us to trace calls using ADF run id
+
 ### Notes
 Please also have look at https://github.com/Azure-Samples/opencensus-with-fastapi-and-azure-monitor
 
