@@ -1,5 +1,4 @@
 import logging
-import traceback
 from typing import Union
 
 from opencensus.trace import (
@@ -23,7 +22,7 @@ HTTP_ROUTE = attributes_helper.COMMON_ATTRIBUTES["HTTP_ROUTE"]
 HTTP_URL = attributes_helper.COMMON_ATTRIBUTES["HTTP_URL"]
 HTTP_STATUS_CODE = attributes_helper.COMMON_ATTRIBUTES["HTTP_STATUS_CODE"]
 
-module_logger = None
+framework_logger = None
 
 
 def _add_pre_request_attributes(span: Union[Span, BlankSpan], request: Request):
@@ -35,10 +34,20 @@ def _add_pre_request_attributes(span: Union[Span, BlankSpan], request: Request):
     span.add_attribute(HTTP_URL, str(request.url))
     span.add_attribute(HTTP_ROUTE, request.url.path)
 
-
-
-def _post_request(span: Union[Span, BlankSpan], response: Response):
+async def finish_tracer(response, span, tracer):
     span.add_attribute(HTTP_STATUS_CODE, response.status_code)
+    # will this always be same method
+    span_context = tracer.span_context
+    traceid = span_context.trace_id
+    spanid = span_context.span_id
+    trace_options = span_context.trace_options.enabled
+    # Convert the trace options
+    trace_options = "01" if trace_options else "00"
+    response.headers.append("traceid", traceid)
+    response.headers.append("trace_options", trace_options)
+    response.headers.append("spanid", spanid)
+    tracer.end_span()
+    tracer.finish()
 
 
 class OpenCensusMiddleware(BaseHTTPMiddleware):
@@ -55,8 +64,8 @@ class OpenCensusMiddleware(BaseHTTPMiddleware):
         propagator=None,
     ):
         super().__init__(app)
-        global module_logger
-        module_logger = logging.getLogger("trace_logger")
+        global framework_logger
+        framework_logger = logging.getLogger("trace_logger")
         self.sampler = sampler
         self.exporter = exporter
         self.propagator = propagator
@@ -82,49 +91,26 @@ class OpenCensusMiddleware(BaseHTTPMiddleware):
             tracer = self._init_tracer(request)
             span: Span = tracer.start_span(self.component_name)
         except Exception:  # pragma: NO COVER
-            module_logger.error("Failed to trace request", exc_info=True)
+            framework_logger.error("Failed to trace request", exc_info=True)
             return await call_next(request)
-
         try:
             _add_pre_request_attributes(span, request)
         except Exception:  # pragma: NO COVER
-            module_logger.error("Failed to trace request", exc_info=True)
+            framework_logger.error("Failed to trace request", exc_info=True)
 
         try:
-
             response = await call_next(request)
         except Exception as err:  # pragma: NO COVER
             try:
                 handle_exception(span, err)
-                tracer.end_span()
-                tracer.finish()
-
+                await finish_tracer(response, span, tracer)
             except Exception:  # pragma: NO COVER
-                module_logger.error("Failed to trace response", exc_info=True)
+                framework_logger.error("Failed to trace response", exc_info=True)
             raise err
 
         try:
-            t: Tracer = tracer.get_tracer()
-            # will this always be same method
-            span_context = t.span_context
-            trace_id = span_context.trace_id
-            span_id = span_context.span_id
-            trace_options = span_context.trace_options.enabled
-
-            # Convert the trace options
-            trace_options = "01" if trace_options else "00"
-            response.headers.append("traceid", trace_id)
-            response.headers.append("spanid", span_id)
-            response.headers.append("trace_options", trace_options)
-            # response.headers.append("traceparent", '00-{}-{}-{}'.format(
-            #     trace_id,
-            #     span_id,
-            #     trace_options
-            # ))
-            _post_request(span, response)
-            tracer.end_span()
-            tracer.finish()
+            await finish_tracer(response, span, tracer)
         except Exception:  # pragma: NO COVER
-            module_logger.error("Failed to trace response", exc_info=True)
+            framework_logger.error("Failed to trace response", exc_info=True)
 
         return response

@@ -9,3 +9,5 @@ pip install -r requirements.txt
 pip install build 
 
 pip install poetry`
+
+Please also have look at https://github.com/Azure-Samples/opencensus-with-fastapi-and-azure-monitor

@@ -85,7 +85,7 @@ def already_tracing():
     return False
 
 
-module_logger = logging.getLogger(__name__)
+framework_logger = logging.getLogger(__name__)
 
 
 class AzureLoggerConfig:
