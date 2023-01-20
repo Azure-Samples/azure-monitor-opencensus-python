@@ -12,7 +12,7 @@ from util import util_func
 
 component_name = "client"
 
-logging_config_file_path = os.path.join(os.getcwd(),'monitoring',"examples","logging_config.json")
+logging_config_file_path = os.path.join(os.getcwd(),'monitoring',"examples","logging_enabled_config.json")
 with open(logging_config_file_path) as logging_config_file:
         logging_config = json.load(logging_config_file)
 

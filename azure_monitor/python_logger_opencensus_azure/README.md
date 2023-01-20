@@ -81,10 +81,10 @@ Assuming, if we need to add code for above scenarios, then this will get repeate
 
 ### AppLogger
 
-AppLogger is the logging class which contains bootstrap code to initialize logger using opencensus python sdk.
+AppLogger is a singleton logging class which contains bootstrap code to initialize logger using opencensus python sdk.
 
 ```python
-class AppLogger:
+class AppLogger(object, metaclass=SingletonLoggerFactory):
     def __init__(self, config=None):
         """Create an instance of the Logger class.
 
@@ -237,9 +237,9 @@ More info about dependency monitoring can be found [here.][7]
 
 ### Unit testing 
 
-Unit tests for application using `AppLogger` can use either `logging_enabled` = `false` or `get_disabled_logger()`. This will disable logging during unit tests execution.
+Unit tests for application using `AppLogger` can use `logging_enabled` = `false`. This will disable logging during unit tests execution.
 
-Following example shows the usage of `logging_enabled` = `false` and `get_disabled_logger()` in two unit tests.
+Following example shows the usage of `logging_enabled` = `false` in unit test.
 
     ```python
 
@@ -257,11 +257,6 @@ Following example shows the usage of `logging_enabled` = `false` and `get_disabl
             )
         assert app_logger is not None
         logger = app_logger.get_logger(component_name=component_name)
-        assert logger is not None
-
-    def test_my_method():
-        app_logger = get_disabled_logger()
-        logger = app_logger.get_logger()
         assert logger is not None
 
     ```

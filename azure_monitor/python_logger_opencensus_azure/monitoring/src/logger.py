@@ -14,6 +14,14 @@ from opencensus.ext.flask.flask_middleware import FlaskMiddleware
 from opencensus.trace.samplers import ProbabilitySampler
 
 
+class SingletonLoggerFactory(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(SingletonLoggerFactory, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+    
 class CustomDimensionsFilter(logging.Filter):
     """Add custom-dimensions in each log by using filters."""
 
@@ -28,7 +36,7 @@ class CustomDimensionsFilter(logging.Filter):
         return True
 
 
-class AppLogger:
+class AppLogger(object, metaclass=SingletonLoggerFactory):
     """Logger wrapper that attach the handler to Application Insights."""
 
     HANDLER_NAME = "Azure Application Insights Handler"
@@ -46,8 +54,10 @@ class AppLogger:
         self.config = {"log_level": logging.INFO, "logging_enabled": "true"}
         self.APPINSIGHTS_INSTRUMENTATION_KEY = "APPINSIGHTS_INSTRUMENTATION_KEY"
         self.update_config(config)
+        self.handler = self._initialize_azure_log_handler()
 
-    def _initialize_azure_log_handler(self, component_name, custom_dimensions):
+
+    def _initialize_azure_log_handler(self):
         """Initialize azure log handler."""
         # Adding logging to trace_integrations
         # This will help in adding trace and span ids to logs
@@ -61,9 +71,8 @@ class AppLogger:
         log_handler = AzureLogHandler(
             connection_string=app_insights_cs, export_interval=5.0
         )
-        log_handler.add_telemetry_processor(self._get_callback(component_name))
         log_handler.name = self.HANDLER_NAME
-        log_handler.addFilter(CustomDimensionsFilter(custom_dimensions))
+        
         return log_handler
 
     def _get_trace_exporter(self, component_name="AppLogger"):
@@ -74,18 +83,20 @@ class AppLogger:
         """
         app_insights_cs = "InstrumentationKey=" + self._get_app_insights_key()
         log_exporter = AzureExporter(
-                        connection_string=app_insights_cs, export_interval=0.0
+                        connection_string=app_insights_cs, sampler=ProbabilitySampler(1.0)
                     )
         log_exporter.add_telemetry_processor(self._get_callback(component_name))
         return log_exporter
 
-    def _initialize_logger(self, log_handler, component_name):
+    def _initialize_logger(self, component_name, custom_dimensions):
         """Initialize Logger."""
         logger = logging.getLogger(component_name)
         logger.setLevel(self.log_level)
         if self.config.get("logging_enabled") == "true":
             if not any(x for x in logger.handlers if x.name == self.HANDLER_NAME):
-                logger.addHandler(log_handler)
+                logger.addHandler(self.handler)
+        self.handler.addFilter(CustomDimensionsFilter(custom_dimensions))
+        self.handler.add_telemetry_processor(self._get_callback(component_name))
         return logger
 
 
@@ -101,8 +112,7 @@ class AppLogger:
             Logger: A logger.
         """
         self.update_config(self.config)
-        handler = self._initialize_azure_log_handler(component_name, custom_dimensions)
-        return self._initialize_logger(handler, component_name)
+        return self._initialize_logger(component_name, custom_dimensions)
 
     def get_tracer(self, component_name="AppLogger", parent_tracer=None):
         """Get Tracer Object.
@@ -117,7 +127,7 @@ class AppLogger:
         """
         self.update_config(self.config)
         sampler = AlwaysOnSampler()
-        exporter = self.get_log_exporter(component_name)
+        exporter = self._get_trace_exporter(component_name)
         if self.config.get("logging_enabled") != "true":
             sampler = AlwaysOffSampler()
         if parent_tracer is None:
@@ -139,7 +149,7 @@ class AppLogger:
             component_name (str, optional): [description]. Defaults to "AppLogger".
         """
         FlaskMiddleware(
-            flask_app, exporter=self.get_log_exporter(component_name=component_name)
+            flask_app, exporter=self._get_trace_exporter(component_name=component_name)
             )
 
     def _get_app_insights_key(self):
@@ -179,12 +189,3 @@ class AppLogger:
         self.log_level = self.config.get("log_level")
 
 
-def get_disabled_logger():
-    """Get a disabled AppLogger.
-
-    Returns:
-        AppLogger: A disabled AppLogger
-    """
-    return AppLogger(
-        config={"logging_enabled": "false", "app_insights_key": str(uuid.uuid1())}
-    )

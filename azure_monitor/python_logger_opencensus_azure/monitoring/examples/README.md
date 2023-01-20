@@ -4,7 +4,7 @@ This document will give the overview about examples created using AppLogger clas
 
 ## Examples
 
-1. **api_1.py**: This example contains the code showing the usage of disabled logger.
+1. **api_1.py**: This example contains the code showing the usage with logging disabled.
 1. **api_2.py**: This is a flask api which exposes one rest end point and uses AppLogger
 1. **api_3.py**: This is a flask api which exposes one rest end point and uses AppLogger. This rest end point calls:
     1. Rest end point exposed in **api_2.py**
@@ -21,7 +21,7 @@ Following are the steps to execute the examples:
 
 1. Follow Prerequisites mentioned in [section.](../../README.md#prerequisites-for-using-applogger)
 
-1. Get Application Insights Instrumentation Key (app_insights_instrumentation_key) and update it in **logging_config.json**
+1. Get Application Insights Instrumentation Key (app_insights_instrumentation_key) and update it in **logging_enabled_config.json** and **logging_disabled_config.json**
 
 ```json
 {

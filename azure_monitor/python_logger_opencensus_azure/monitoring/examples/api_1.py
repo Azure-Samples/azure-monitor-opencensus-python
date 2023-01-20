@@ -6,11 +6,13 @@ import sys
 import os
 sys.path.append(os.path.join(os.getcwd(),'monitoring'))
 
-from src.logger import AppLogger, get_disabled_logger
+from src.logger import AppLogger
 component_name ="API_1"
 
-logger = get_disabled_logger().get_logger(component_name=component_name)
-
+logging_config_file_path = os.path.join(os.getcwd(),'monitoring',"examples","logging_disabled_config.json")
+with open(logging_config_file_path) as logging_config_file:
+        logging_config = json.load(logging_config_file)
+logger = AppLogger(config=logging_config).get_logger(component_name=component_name)
 app = Flask(component_name)
 
 @app.route('/', methods=['GET'])
