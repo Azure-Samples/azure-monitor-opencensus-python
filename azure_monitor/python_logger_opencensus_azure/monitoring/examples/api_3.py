@@ -11,7 +11,7 @@ from src.logger import AppLogger
 component_name ="API_3"
 app = Flask(component_name)
 
-logging_config_file_path = os.path.join(os.getcwd(),'monitoring',"examples","logging_config.json")
+logging_config_file_path = os.path.join(os.getcwd(),'monitoring',"examples","logging_enabled_config.json")
 with open(logging_config_file_path) as logging_config_file:
         logging_config = json.load(logging_config_file)
 app_logger = AppLogger(config=logging_config)
