@@ -99,6 +99,8 @@ class AppLogger:
         ...
     def get_tracer(self, component_name="AppLogger", parent_tracer=None):
         ...
+    def get_event_logger(self, component_name="AppLogger", custom_dimensions={}):
+        ...
 
 ```
 
@@ -110,6 +112,7 @@ Parameters used in initialization AppLogger:
 config = {
         "log_level": "DEBUG",
         "logging_enabled": "true",
+        "event_logging_enabled": "true",
         "app_insights_key": "<app_insights_instrumentation_key>",
     }
 ```
@@ -130,7 +133,13 @@ config = {
 
 > Please make sure to set application insights key even when logging_enabled is set to "false" otherwise, it will throw exception during creation of logger.
 
-  3. **app_insights_key**: This contains the value of application insights key. If **not set** here, it should be set as an environment variable as `APPINSIGHTS_INSTRUMENTATION_KEY="YOUR KEY"`. 
+  3. **event_logging_enabled**(optional): This is used to enable or disable the event logging. By default its value is set to "true". To disable event logging `event_logging_enabled` can be set to `false`. This is useful when we need to run unit tests and don't want to send telemetry. Following could be scenarios where event logging can be turned off:    
+      1. Unit Tests
+      1. Local development  
+
+> Please make sure to set application insights key even when event_logging_enabled is set to "false" otherwise, it will throw exception during creation of event logger.
+
+  4. **app_insights_key**: This contains the value of application insights key. If **not set** here, it should be set as an environment variable as `APPINSIGHTS_INSTRUMENTATION_KEY="YOUR KEY"`. 
 
 > If application insights key is neither set in config, nor in environment variable, initialization of AppLogger will fail with exception.
 
@@ -150,6 +159,15 @@ config = {
 
     `get_tracer` function return a Tracer object. It sets the [component_name][6] to `ai.cloud.role` which is used to identify component in application map. It also sets parent_tracer for proper correlation.
 
+* **Function `get_event_logger`**
+
+    ```python
+     def get_event_logger(self, component_name="AppLogger", custom_dimensions={}):
+    ```
+
+    `get_event_logger` function adds AzureEventHandler to the logger and also adds `ai.cloud.role`= [component_name][6] to the logger. It also adds the default dimensions and returns a logger object.
+
+
 * **Function `enable_flask`**
 
     ```python
@@ -160,7 +178,7 @@ config = {
 
     Currently function for enabling flask is added but if application requires [integration][7] with other libraries like httplib, django, mysql, pymysql, pymongo, fastapi, postgresql etc then corresponding functions need to be added.
 
-* **Parameters used in `get_logger` and `get_tracer` functions in AppLogger**:
+* **Parameters used in `get_logger`, `get_tracer` and `get_event_logger`functions in AppLogger**:
 
   * **component_name**: (optional): Default value of this param is "AppLogger". Its always best practice to pass this parameter as the name of component in which logger is initialized eg "API3" etc. This will be help in filtering logs in application insights based on the `component_name`. This will appear as `cloud_RoleName` in app insight logs. Here is screenshot of application map in application insights:
     ![alt text](./monitoring/img/application_map.png)
