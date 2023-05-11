@@ -17,11 +17,13 @@ class TestAppLogger(unittest.TestCase):
         cls.valid_config = {
             "log_level": "DEBUG",
             "logging_enabled": "true",
+            "event_logging_enabled": "true",
             "app_insights_key": test_instrumentation_key,
         }
         cls.invalid_config = {
             "log_level": "DEBUG",
             "logging_enabled": "false",
+            "event_logging_enabled": "false",
             "app_insights_key": test_invalid_instrumentation_key,
         }
 
@@ -76,6 +78,21 @@ class TestAppLogger(unittest.TestCase):
         except Exception:
             assert False
 
+    def test_event_logging(self):
+        """Test to use event logging functions."""
+        global test_instrumentation_key
+        try:
+            component_name = "TestComponent"
+            app_logger = AppLogger(config=self.valid_config)
+            assert app_logger is not None
+            test_event_logger = app_logger.get_event_logger(
+                component_name=component_name,
+            )
+
+            assert test_event_logger is not None
+            test_event_logger.info("Test Event Logging")
+        except Exception:
+            assert False
 
     def test_tracing(self):
         """Test for Tracer."""
@@ -160,6 +177,21 @@ class TestAppLogger(unittest.TestCase):
         except Exception:
             assert False
 
+    def test_event_logging_extra_params(self):
+        """Test event logging extra params."""
+        try:
+            global test_instrumentation_key
+            component_name = "TestComponent"
+            app_logger = AppLogger(
+                config=self.valid_config,
+            )
+            test_event_logger = app_logger.get_event_logger(
+                component_name=component_name,
+            )
+            extra_params = {"custom_dimensions": {"key1": "value1"}}
+            test_event_logger.info("Event Logging with extra params", extra=extra_params)
+        except Exception:
+            assert False
 
     def test_disabled_logger(self):
         """Test disabled logger."""
