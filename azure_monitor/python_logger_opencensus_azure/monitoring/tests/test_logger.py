@@ -17,13 +17,11 @@ class TestAppLogger(unittest.TestCase):
         cls.valid_config = {
             "log_level": "DEBUG",
             "logging_enabled": "true",
-            "event_logging_enabled": "true",
             "app_insights_key": test_instrumentation_key,
         }
         cls.invalid_config = {
             "log_level": "DEBUG",
             "logging_enabled": "false",
-            "event_logging_enabled": "false",
             "app_insights_key": test_invalid_instrumentation_key,
         }
 

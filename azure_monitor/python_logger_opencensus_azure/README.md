@@ -112,7 +112,6 @@ Parameters used in initialization AppLogger:
 config = {
         "log_level": "DEBUG",
         "logging_enabled": "true",
-        "event_logging_enabled": "true",
         "app_insights_key": "<app_insights_instrumentation_key>",
     }
 ```
@@ -133,13 +132,7 @@ config = {
 
 > Please make sure to set application insights key even when logging_enabled is set to "false" otherwise, it will throw exception during creation of logger.
 
-  3. **event_logging_enabled**(optional): This is used to enable or disable the event logging. By default its value is set to "true". To disable event logging `event_logging_enabled` can be set to `false`. This is useful when we need to run unit tests and don't want to send telemetry. Following could be scenarios where event logging can be turned off:    
-      1. Unit Tests
-      1. Local development  
-
-> Please make sure to set application insights key even when event_logging_enabled is set to "false" otherwise, it will throw exception during creation of event logger.
-
-  4. **app_insights_key**: This contains the value of application insights key. If **not set** here, it should be set as an environment variable as `APPINSIGHTS_INSTRUMENTATION_KEY="YOUR KEY"`. 
+  3. **app_insights_key**: This contains the value of application insights key. If **not set** here, it should be set as an environment variable as `APPINSIGHTS_INSTRUMENTATION_KEY="YOUR KEY"`. 
 
 > If application insights key is neither set in config, nor in environment variable, initialization of AppLogger will fail with exception.
 

@@ -5,7 +5,7 @@ import uuid
 from os import getenv
 
 from opencensus.ext.azure.common import utils
-from opencensus.ext.azure.log_exporter import AzureLogHandler, AzureEventHandlder
+from opencensus.ext.azure.log_exporter import AzureLogHandler, AzureEventHandler
 from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace import config_integration
 from opencensus.trace.samplers import AlwaysOffSampler, AlwaysOnSampler
@@ -71,7 +71,7 @@ class AppLogger:
     def _initialize_azure_event_handler(self, component_name, custom_dimensions):
         """Initialize azure event handler."""
         app_insights_cs = "InstrumentationKey=" + self._get_app_insights_key()
-        event_handler = AzureEventHandlder(
+        event_handler = AzureEventHandler(
             connection_string=app_insights_cs, export_interval=5.0
         )
         event_handler.add_telemetry_processor(self._get_callback(component_name))
@@ -98,14 +98,6 @@ class AppLogger:
         logger.setLevel(self.log_level)
         if self.config.get("logging_enabled") == "true":
             if not any(x for x in logger.handlers if x.name == self.HANDLER_NAME):
-                logger.addHandler(log_handler)
-        return logger
-
-    def _initialize_event_logger(self, log_handler, component_name):
-        """Initialize Event Logger."""
-        logger = logging.getLogger(component_name)
-        if self.config.get("event_logging_enabled") == "true":
-            if not any(x for x in logger.handlers if x.name == self.EVENT_HANDLER_NAME):
                 logger.addHandler(log_handler)
         return logger
 
@@ -137,7 +129,7 @@ class AppLogger:
         """
         self.update_config(self.config)
         handler = self._initialize_azure_event_handler(component_name, custom_dimensions)
-        return self._initialize_event_logger(handler, component_name)
+        return self._initialize_logger(handler, component_name)
 
     def get_tracer(self, component_name="AppLogger", parent_tracer=None):
         """Get Tracer Object.

@@ -18,7 +18,6 @@ app_logger = AppLogger(config=logging_config)
 
 app_logger.enable_flask(flask_app=app,component_name= component_name)
 logger = app_logger.get_logger(component_name=component_name)
-event_logger = app_logger.get_event_logger(component_name=component_name)
 tracer = app_logger.get_tracer(component_name=component_name)
 
 @app.route('/', methods=['GET'])
@@ -29,7 +28,6 @@ def home():
         [Json]: [{'data': '<return string>'}]
     """
     logger.info("In API2 home function")
-    event_logger.info("Success_API2")
     return jsonify({'data': 'Success API2'})
 
 app.run(host="localhost", port=8100, debug=True)

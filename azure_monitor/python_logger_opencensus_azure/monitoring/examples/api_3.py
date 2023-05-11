@@ -18,7 +18,6 @@ app_logger = AppLogger(config=logging_config)
 
 app_logger.enable_flask(flask_app=app,component_name= component_name)
 logger = app_logger.get_logger(component_name=component_name)
-event_logger = app_logger.get_event_logger(component_name=component_name)
 tracer = app_logger.get_tracer(component_name=component_name)
 
 @app.route('/', methods=['GET'])
@@ -39,7 +38,7 @@ def home():
     logger.info("Calling API 2")
     response = requests.get(url='http://localhost:8100/')
     print(f"response = {response.content}")
-    event_logger.info("Success_API3")
+
     return jsonify({'data': 'Success API3'})
 
 def task1():
@@ -49,7 +48,6 @@ def task1():
         [str]: [Return string]
     """
     logger.info("In API3 task1 function")
-    event_logger.info("Success_API3_task1")
     return "task1 success!"
 
 
@@ -60,7 +58,6 @@ def task2():
         [str]: [Return string]
     """
     logger.info("In API3 task2 function")
-    event_logger.info("Success_API3_task2")
     return "task2 success!"
 
 if __name__ == "__main__":
