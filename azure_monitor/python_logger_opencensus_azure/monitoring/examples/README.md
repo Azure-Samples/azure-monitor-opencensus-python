@@ -98,27 +98,38 @@ dependencies
 
     To find number of times API4 is triggered:
 
-    ```py
+    ```kusto
     customEvents
     | where name == 'Start_API4'
 
     ```
     To find execution time for API4:
 
-    ```py
+    ```kusto
     customEvents
     | where name == 'API4_Execution_Time'
     | project name, customDimensions.execution_time
 
     ```
-    To find the JSON strings returned:
+    To find the data inside JSON strings returned:
 
-    ```py
+    ```kusto
     customEvents
     | where name == 'API4_Return_Json'
-    | project name, customDimensions.response
+    | extend parsed_json = parse_json(tostring(customDimensions.response))
+    | project name, parsed_json["data"]
 
     ```
 
 5. Verify application map in application insights. 
 ![alt text](../img/application_map.png)
+
+## Appendix:
+
+The following table presents various variations of event logging and their corresponding definitions and use cases. Event logging is a crucial tool for collecting and analyzing data in order to make informed decisions and improve business outcomes. By understanding the different types of event logging variations and when to use them, organizations can better capture and analyze important data points to drive their business forward.
+
+| Event logging variation               | What it is                                                                                   | Example use cases                                                                                      |
+| ------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------|
+| Plain Event                           | Event logged without any custom_dimension                                                    | Success & failure counts, start & end events                                                           |
+| Event with a simple custom dimension  | Event with custom_dimension with a simple type like number or string                         | Execution time, number of tokens in a completion, number of completions in case of LLM calls           |
+| Event with a complex custom dimension | Event with custom_dimension with a complex type like a json object, dictionary or list etc   | To log JSON objects like REST API responses, evaluation metrics in JSON format in case of LLM calls    |
