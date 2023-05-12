@@ -117,7 +117,7 @@ class AppLogger:
         """
         self.update_config(self.config)
         sampler = AlwaysOnSampler()
-        exporter = self.get_log_exporter(component_name)
+        exporter = self._get_trace_exporter(component_name)
         if self.config.get("logging_enabled") != "true":
             sampler = AlwaysOffSampler()
         if parent_tracer is None:
@@ -139,7 +139,7 @@ class AppLogger:
             component_name (str, optional): [description]. Defaults to "AppLogger".
         """
         FlaskMiddleware(
-            flask_app, exporter=self.get_log_exporter(component_name=component_name)
+            flask_app, exporter=self._get_trace_exporter(component_name=component_name)
             )
 
     def _get_app_insights_key(self):
