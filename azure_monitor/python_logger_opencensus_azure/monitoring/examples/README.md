@@ -100,14 +100,15 @@ dependencies
 
     ```py
     customEvents
-    | where name == 'API4_Execution_Time'
+    | where name == 'Start_API4'
 
     ```
     To find execution time for API4:
 
     ```py
     customEvents
-    | where name == 'Start_API4'
+    | where name == 'API4_Execution_Time'
+    | project name, customDimensions.execution_time
 
     ```
     To find the JSON strings returned:
@@ -115,6 +116,7 @@ dependencies
     ```py
     customEvents
     | where name == 'API4_Return_Json'
+    | project name, customDimensions.response
 
     ```
 
