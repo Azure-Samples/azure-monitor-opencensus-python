@@ -37,7 +37,7 @@ def home():
     extra_params = {"custom_dimensions": {"execution_time":execution_time}}
 
     #Event with an additional custom dimension execution_time
-    event_logger.info("API4_Json_Value", extra=extra_params)
+    event_logger.info("API4_Execution_Time", extra=extra_params)
 
     extra_params = {"custom_dimensions": {"response":jsonified_data}}
 

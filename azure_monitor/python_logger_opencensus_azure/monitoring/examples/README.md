@@ -14,6 +14,7 @@ This document will give the overview about examples created using AppLogger clas
     1. Rest end point exposed in **api_3.py**
     1. Also calls `util_func` function in **util**  
     It passes the tracer created in `client.py` to util_func as a parent_tracer.
+1. **api_4.py**: This example contains the code showing the usage of event logger.
 
 ## Usage
 
@@ -56,6 +57,11 @@ pip install -r .\monitoring\requirements.txt
     ```bash
     python .\monitoring\examples\client.py 
     ```
+    4. Run api_4.py flask app
+
+    ```bash
+    python .\monitoring\examples\api_4.py 
+    ```
 
 ## Results of executing examples:
 
@@ -88,5 +94,29 @@ dependencies
 
 ```
 
-4. Verify application map in application insights. 
+4. Use following Kusto queries to filter custom events logged.
+
+    To find number of times API4 is triggered:
+
+    ```py
+    customEvents
+    | where name == 'API4_Execution_Time'
+
+    ```
+    To find execution time for API4:
+
+    ```py
+    customEvents
+    | where name == 'Start_API4'
+
+    ```
+    To find the JSON strings returned:
+
+    ```py
+    customEvents
+    | where name == 'API4_Return_Json'
+
+    ```
+
+5. Verify application map in application insights. 
 ![alt text](../img/application_map.png)
