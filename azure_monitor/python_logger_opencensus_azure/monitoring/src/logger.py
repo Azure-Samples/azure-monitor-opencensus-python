@@ -97,7 +97,7 @@ class AppLogger:
         logger = logging.getLogger(component_name)
         logger.setLevel(self.log_level)
         if self.config.get("logging_enabled") == "true":
-            if not any(x for x in logger.handlers if x.name == self.HANDLER_NAME):
+            if not any(x for x in logger.handlers if x.name == self.HANDLER_NAME or x.name == self.EVENT_HANDLER_NAME):
                 logger.addHandler(log_handler)
         return logger
 
