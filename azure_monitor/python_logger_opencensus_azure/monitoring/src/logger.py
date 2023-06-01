@@ -5,7 +5,7 @@ import uuid
 from os import getenv
 
 from opencensus.ext.azure.common import utils
-from opencensus.ext.azure.log_exporter import AzureLogHandler
+from opencensus.ext.azure.log_exporter import AzureLogHandler, AzureEventHandler
 from opencensus.ext.azure.trace_exporter import AzureExporter
 from opencensus.trace import config_integration
 from opencensus.trace.samplers import AlwaysOffSampler, AlwaysOnSampler
@@ -32,6 +32,8 @@ class AppLogger:
     """Logger wrapper that attach the handler to Application Insights."""
 
     HANDLER_NAME = "Azure Application Insights Handler"
+
+    EVENT_HANDLER_NAME = "Azure Application Insights Event Handler"
 
     def __init__(self, config=None):
         """Create an instance of the Logger class.
@@ -66,6 +68,17 @@ class AppLogger:
         log_handler.addFilter(CustomDimensionsFilter(custom_dimensions))
         return log_handler
 
+    def _initialize_azure_event_handler(self, component_name, custom_dimensions):
+        """Initialize azure event handler."""
+        app_insights_cs = "InstrumentationKey=" + self._get_app_insights_key()
+        event_handler = AzureEventHandler(
+            connection_string=app_insights_cs, export_interval=5.0
+        )
+        event_handler.add_telemetry_processor(self._get_callback(component_name))
+        event_handler.name = self.EVENT_HANDLER_NAME
+        event_handler.addFilter(CustomDimensionsFilter(custom_dimensions))
+        return event_handler
+
     def _get_trace_exporter(self, component_name="AppLogger"):
         """[Get log exporter]
 
@@ -84,10 +97,9 @@ class AppLogger:
         logger = logging.getLogger(component_name)
         logger.setLevel(self.log_level)
         if self.config.get("logging_enabled") == "true":
-            if not any(x for x in logger.handlers if x.name == self.HANDLER_NAME):
+            if not any(x for x in logger.handlers if x.name == self.HANDLER_NAME or x.name == self.EVENT_HANDLER_NAME):
                 logger.addHandler(log_handler)
         return logger
-
 
     def get_logger(self, component_name="AppLogger", custom_dimensions={}):
         """Get Logger Object.
@@ -104,6 +116,21 @@ class AppLogger:
         handler = self._initialize_azure_log_handler(component_name, custom_dimensions)
         return self._initialize_logger(handler, component_name)
 
+    def get_event_logger(self, component_name="AppLogger", custom_dimensions={}):
+        """Get Event ogger Object.
+
+        Args:
+            component_name (str, optional): Name of logger. Defaults to "AppLogger".
+            custom_dimensions (dict, optional): {"key":"value"} to capture with every log.
+                Defaults to {}.
+
+        Returns:
+            Logger: A logger.
+        """
+        self.update_config(self.config)
+        handler = self._initialize_azure_event_handler(component_name, custom_dimensions)
+        return self._initialize_logger(handler, component_name)
+
     def get_tracer(self, component_name="AppLogger", parent_tracer=None):
         """Get Tracer Object.
 
@@ -117,7 +144,7 @@ class AppLogger:
         """
         self.update_config(self.config)
         sampler = AlwaysOnSampler()
-        exporter = self.get_log_exporter(component_name)
+        exporter = self._get_trace_exporter(component_name)
         if self.config.get("logging_enabled") != "true":
             sampler = AlwaysOffSampler()
         if parent_tracer is None:
@@ -139,7 +166,7 @@ class AppLogger:
             component_name (str, optional): [description]. Defaults to "AppLogger".
         """
         FlaskMiddleware(
-            flask_app, exporter=self.get_log_exporter(component_name=component_name)
+            flask_app, exporter=self._get_trace_exporter(component_name=component_name)
             )
 
     def _get_app_insights_key(self):

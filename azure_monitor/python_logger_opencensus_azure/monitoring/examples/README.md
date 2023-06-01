@@ -14,6 +14,7 @@ This document will give the overview about examples created using AppLogger clas
     1. Rest end point exposed in **api_3.py**
     1. Also calls `util_func` function in **util**  
     It passes the tracer created in `client.py` to util_func as a parent_tracer.
+1. **api_4.py**: This example contains the code showing the usage of event logger.
 
 ## Usage
 
@@ -56,6 +57,11 @@ pip install -r .\monitoring\requirements.txt
     ```bash
     python .\monitoring\examples\client.py 
     ```
+    4. Run api_4.py flask app
+
+    ```bash
+    python .\monitoring\examples\api_4.py 
+    ```
 
 ## Results of executing examples:
 
@@ -88,5 +94,42 @@ dependencies
 
 ```
 
-4. Verify application map in application insights. 
+4. Use following Kusto queries to filter custom events logged.
+
+    To find number of times API4 is triggered:
+
+    ```kusto
+    customEvents
+    | where name == 'Start_API4'
+
+    ```
+    To find execution time for API4:
+
+    ```kusto
+    customEvents
+    | where name == 'API4_Execution_Time'
+    | project name, customDimensions.execution_time
+
+    ```
+    To find the data inside JSON strings returned:
+
+    ```kusto
+    customEvents
+    | where name == 'API4_Return_Json'
+    | extend parsed_json = parse_json(tostring(customDimensions.response))
+    | project name, parsed_json["data"]
+
+    ```
+
+5. Verify application map in application insights. 
 ![alt text](../img/application_map.png)
+
+## Appendix:
+
+The following table presents various variations of event logging and their corresponding definitions and use cases. Event logging is a crucial tool for collecting and analyzing data in order to make informed decisions and improve business outcomes. By understanding the different types of event logging variations and when to use them, organizations can better capture and analyze important data points to drive their business forward.
+
+| Event logging variation               | What it is                                                                                   | Example use cases                                                                                      |
+| ------------------------------------- | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------|
+| Plain Event                           | Event logged without any custom_dimension                                                    | Success & failure counts, start & end events                                                           |
+| Event with a simple custom dimension  | Event with custom_dimension with a simple type like number or string                         | Execution time, number of tokens in a completion, number of completions in case of LLM calls           |
+| Event with a complex custom dimension | Event with custom_dimension with a complex type like a json object, dictionary or list etc   | To log JSON objects like REST API responses, evaluation metrics in JSON format in case of LLM calls    |

@@ -99,6 +99,8 @@ class AppLogger:
         ...
     def get_tracer(self, component_name="AppLogger", parent_tracer=None):
         ...
+    def get_event_logger(self, component_name="AppLogger", custom_dimensions={}):
+        ...
 
 ```
 
@@ -150,6 +152,15 @@ config = {
 
     `get_tracer` function return a Tracer object. It sets the [component_name][6] to `ai.cloud.role` which is used to identify component in application map. It also sets parent_tracer for proper correlation.
 
+* **Function `get_event_logger`**
+
+    ```python
+     def get_event_logger(self, component_name="AppLogger", custom_dimensions={}):
+    ```
+
+    `get_event_logger` function adds AzureEventHandler to the logger and also adds `ai.cloud.role`= [component_name][6] to the logger. It also adds the default dimensions and returns a logger object.
+
+
 * **Function `enable_flask`**
 
     ```python
@@ -160,7 +171,7 @@ config = {
 
     Currently function for enabling flask is added but if application requires [integration][7] with other libraries like httplib, django, mysql, pymysql, pymongo, fastapi, postgresql etc then corresponding functions need to be added.
 
-* **Parameters used in `get_logger` and `get_tracer` functions in AppLogger**:
+* **Parameters used in `get_logger`, `get_tracer` and `get_event_logger`functions in AppLogger**:
 
   * **component_name**: (optional): Default value of this param is "AppLogger". Its always best practice to pass this parameter as the name of component in which logger is initialized eg "API3" etc. This will be help in filtering logs in application insights based on the `component_name`. This will appear as `cloud_RoleName` in app insight logs. Here is screenshot of application map in application insights:
     ![alt text](./monitoring/img/application_map.png)
