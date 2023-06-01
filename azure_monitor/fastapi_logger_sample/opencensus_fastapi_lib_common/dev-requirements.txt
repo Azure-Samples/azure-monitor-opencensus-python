@@ -1,0 +1,13 @@
+opencensus==0.11.0
+opencensus-ext-azure==1.1.7
+opencensus-ext-prometheus==0.2.1
+opencensus-ext-logging==0.1.1
+opencensus-ext-requests==0.8.0
+opencensus-ext-threading==0.1.2
+opencensus-ext-httplib==0.7.5
+fastapi==0.85.2
+python-dotenv==0.21.0
+pytest==7.1.3
+pydantic==1.10.2
+azure-core==1.25.1
+mock
