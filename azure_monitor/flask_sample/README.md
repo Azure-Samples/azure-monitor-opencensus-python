@@ -32,7 +32,7 @@ SQLALCHEMY_DATABASE_URI = <your-database-URI-here>
 2. Run the main application via `python sample.py`.
 4. Hit your local endpoint (should be http://localhost:5000). This should open up a browser to the main page.
 5. On the newly opened page, you can add tasks via the textbox under `Add a new todo item:`. You can enter any text you want (cannot be blank).
-6. Click `Add Item` to add the task. The task will be added under `Incomplete Items`. Adding an item with greater than 10 characters will generate an error.
+6. Press `Enter` to add the task. The task will be added under `Incomplete Items`. Adding an item with greater than 10 characters will generate an error.
 7. To utilize the `Save to File` feature, run the endpoint application via `python endpoint.py`. This will run another Flask application with a WSGI server running on http://localhost:5001. Click `Save to File` and all tasks will be written to a file `file.txt` in the `output` folder.
 8. Each task has a `Mark As Complete` button. Clicking it will move the task from incomplete to completed.
 9. You can also hit the `blacklist` url page to see a sample of a page that does not have telemetry being sent (http://localhost:5000/blacklist).

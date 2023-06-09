@@ -3,10 +3,10 @@ import requests
 
 from flask import flash, make_response, redirect, render_template, request, url_for
 
-from app import app, db, logger
-from app.forms import ToDoForm
-from app.metrics import mmap, request_measure, tmap
-from app.models import Todo
+from .app import app, db
+from .forms import ToDoForm
+from .metrics import mmap, request_measure, tmap
+from .models import Todo
 
 # Hitting any endpoint will track an incoming request (requests)
 
@@ -42,7 +42,7 @@ def save():
     if response.ok:
         flash("Todo saved to file.")
     else:
-        logger.error(response.reason)
+        app.logger.error(response.reason)
         flash("Exception occurred while saving")
     return redirect('/')
 
@@ -63,12 +63,12 @@ def add():
         db.session.add(todo)
         db.session.commit()
         # Logging with the logger will be tracked as logging telemetry (traces)
-        logger.warn("Added entry: " + todo.text)
+        app.logger.warn("Added entry: " + todo.text)
         # Records a measure metric to be sent as telemetry (customMetrics)
         mmap.measure_int_put(request_measure, 1)
         mmap.record(tmap)
     except Exception:
-        logger.exception("ERROR: Input length too long.")
+        app.logger.exception("ERROR: Input length too long.")
         return redirect('/error')
     return redirect('/')
 
@@ -78,7 +78,7 @@ def complete(id):
     todo = Todo.query.filter_by(id=int(id)).first()
     todo.complete = True
     db.session.commit()
-    logger.warn("Marked complete: " + todo.text)
+    app.logger.warn("Marked complete: " + todo.text)
     return redirect('/')
 
 ### Endpoints for CLI demo ###
@@ -106,12 +106,12 @@ def add_task(task):
         db.session.add(todo)
         db.session.commit()
         # Logging with the logger will be tracked as logging telemetry (traces)
-        logger.warn("Added entry: " + todo.text)
+        app.logger.warn("Added entry: " + todo.text)
         # Records a measure metric to be sent as telemetry (customMetrics)
         mmap.measure_int_put(request_measure, 1)
         mmap.record(tmap)
     except Exception:
-        logger.exception("ERROR: Input length too long.")
+        app.logger.exception("ERROR: Input length too long.")
         return make_response("ERROR: Input length too long.", 500)
     return make_response("Successfully added task.", 200)
 
@@ -121,7 +121,7 @@ def complete_task(id):
     todo = Todo.query.filter_by(id=int(id)).first()
     todo.complete = True
     db.session.commit()
-    logger.warn("Marked complete: " + todo.text)
+    app.logger.warn("Marked complete: " + todo.text)
     return make_response("Success", 200)
 
 
@@ -135,9 +135,9 @@ def save_tasks():
         for entry in incomplete]
     response = requests.post(url=url, data=json.dumps(entries))
     if response.ok:
-        logger.warn("Todo saved to file.")
+        app.logger.warn("Todo saved to file.")
         return make_response("Todo saved to file.", 200)
     else:
-        logger.error(response.reason)
+        app.logger.error(response.reason)
         return make_response("Exception occurred while saving.", 500)
     return redirect('/')
